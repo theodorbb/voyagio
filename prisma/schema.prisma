@@ -1,0 +1,238 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums (SQLite doesn't support native enums, use String with app-level validation) ───
+
+// Roles: TOURIST, OPERATOR, ADMIN
+// ActivityStatus: DRAFT, ACTIVE, ARCHIVED
+// BookingStatus: CONFIRMED, CANCELLED, COMPLETED
+// TimeSlotStatus: AVAILABLE, FULL, CANCELLED
+// TripStatus: PLANNING, ACTIVE, COMPLETED
+
+// ─── Users ───────────────────────────────────────────────
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         String   @default("TOURIST") // TOURIST | OPERATOR | ADMIN
+  avatar       String?
+  bio          String?
+  preferences  String?  // JSON string: { interests: [], budgetRange: "", travelStyle: "" }
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Operator relationship
+  activities Activity[] @relation("OperatorActivities")
+
+  bookings  Booking[]
+  favorites Favorite[]
+  reviews   Review[]
+  trips     Trip[]
+
+  @@map("users")
+}
+
+// ─── Destinations ────────────────────────────────────────
+
+model Destination {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  country     String
+  description String
+  coverImage  String
+  latitude    Float
+  longitude   Float
+  highlights  String?  // JSON string: ["Beach", "Nightlife", "History"]
+  featured    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  activities Activity[]
+  trips      Trip[]
+
+  @@map("destinations")
+}
+
+// ─── Activities ──────────────────────────────────────────
+
+model Activity {
+  id           String   @id @default(cuid())
+  title        String
+  slug         String   @unique
+  description  String
+  category     String   // Adventure, Cultural, Food & Wine, Nature, Water Sports, Wellness, Photography, Nightlife
+  price        Float
+  currency     String   @default("EUR")
+  duration     Int      // in minutes
+  difficulty   String?  // Easy, Moderate, Challenging
+  maxGroupSize Int      @default(20)
+  images       String   // JSON string: ["url1", "url2", ...]
+  latitude     Float
+  longitude    Float
+  included     String?  // JSON string: ["Guide", "Transport", "Lunch"]
+  highlights   String?  // JSON string: ["Scenic views", "Local culture"]
+  rating       Float    @default(0)
+  reviewCount  Int      @default(0)
+  featured     Boolean  @default(false)
+  status       String   @default("ACTIVE") // DRAFT | ACTIVE | ARCHIVED
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  destinationId String
+  destination   Destination @relation(fields: [destinationId], references: [id])
+
+  operatorId String
+  operator   User   @relation("OperatorActivities", fields: [operatorId], references: [id])
+
+  timeSlots      TimeSlot[]
+  bookings       Booking[]
+  favorites      Favorite[]
+  reviews        Review[]
+  tripActivities TripActivity[]
+
+  @@index([destinationId])
+  @@index([operatorId])
+  @@index([category])
+  @@index([status])
+  @@map("activities")
+}
+
+// ─── Time Slots (Schedule / Availability) ────────────────
+
+model TimeSlot {
+  id          String   @id @default(cuid())
+  date        DateTime // Date of the slot
+  startTime   String   // "09:00"
+  endTime     String   // "12:00"
+  capacity    Int
+  bookedCount Int      @default(0)
+  status      String   @default("AVAILABLE") // AVAILABLE | FULL | CANCELLED
+
+  activityId String
+  activity   Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+
+  bookings Booking[]
+
+  @@index([activityId])
+  @@index([date])
+  @@map("time_slots")
+}
+
+// ─── Bookings ────────────────────────────────────────────
+
+model Booking {
+  id           String   @id @default(cuid())
+  participants Int
+  totalPrice   Float
+  status       String   @default("CONFIRMED") // CONFIRMED | CANCELLED | COMPLETED
+  notes        String?
+  createdAt    DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  activityId String
+  activity   Activity @relation(fields: [activityId], references: [id])
+
+  timeSlotId String
+  timeSlot   TimeSlot @relation(fields: [timeSlotId], references: [id])
+
+  review Review?
+
+  @@index([userId])
+  @@index([activityId])
+  @@index([status])
+  @@map("bookings")
+}
+
+// ─── Favorites ───────────────────────────────────────────
+
+model Favorite {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  activityId String
+  activity   Activity @relation(fields: [activityId], references: [id])
+
+  @@unique([userId, activityId])
+  @@map("favorites")
+}
+
+// ─── Reviews ─────────────────────────────────────────────
+
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int      // 1–5
+  comment   String?
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  activityId String
+  activity   Activity @relation(fields: [activityId], references: [id])
+
+  bookingId String?  @unique
+  booking   Booking? @relation(fields: [bookingId], references: [id])
+
+  @@index([activityId])
+  @@map("reviews")
+}
+
+// ─── Trips (Itinerary Plans) ─────────────────────────────
+
+model Trip {
+  id          String   @id @default(cuid())
+  name        String
+  startDate   DateTime
+  endDate     DateTime
+  budget      Float?
+  status      String   @default("PLANNING") // PLANNING | ACTIVE | COMPLETED
+  preferences String?  // JSON: { travelStyle, interests, pace, groupType, budgetRange }
+  summary     String?  // Generated trip summary text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  destinationId String
+  destination   Destination @relation(fields: [destinationId], references: [id])
+
+  activities TripActivity[]
+
+  @@index([userId])
+  @@map("trips")
+}
+
+// ─── Trip Activities (Items in an Itinerary) ─────────────
+
+model TripActivity {
+  id            String  @id @default(cuid())
+  dayNumber     Int     // Day 1, Day 2, etc.
+  orderIndex    Int     // Order within the day
+  startTime     String? // "09:00"
+  notes         String?
+  timeOfDay     String? // "morning" | "afternoon" | "evening"
+
+  tripId String
+  trip   Trip   @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  activityId String
+  activity   Activity @relation(fields: [activityId], references: [id])
+
+  @@index([tripId])
+  @@map("trip_activities")
+}

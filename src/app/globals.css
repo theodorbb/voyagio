@@ -1,0 +1,145 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #080D19;
+  --foreground: #F1F5F9;
+  --primary: #1B4965;
+  --primary-light: #5FA8D3;
+  --primary-dark: #0D2B3E;
+  --accent: #F4845F;
+  --accent-light: #F7B267;
+  --surface: #0F172A;
+  --surface-light: #1E293B;
+  --muted: #64748B;
+  --border-color: #1E293B;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-[var(--background)] text-[var(--foreground)] antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight;
+  }
+
+  ::selection {
+    background: rgba(95, 168, 211, 0.3);
+  }
+}
+
+@layer components {
+  .section-container {
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-padding {
+    @apply py-20 md:py-28 lg:py-32;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary-light via-accent-light to-accent bg-clip-text text-transparent;
+  }
+
+  .glass-card {
+    @apply rounded-2xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-xl;
+  }
+
+  .glass-card-hover {
+    @apply glass-card transition-all duration-500 hover:border-white/[0.15] hover:bg-white/[0.06] hover:shadow-lg hover:shadow-primary-light/5;
+  }
+
+  .glow-accent {
+    box-shadow: 0 0 60px -12px rgba(244, 132, 95, 0.3);
+  }
+
+  .glow-primary {
+    box-shadow: 0 0 60px -12px rgba(95, 168, 211, 0.3);
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-accent/90 hover:shadow-lg hover:shadow-accent/25 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)];
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:border-white/30 hover:bg-white/10 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)];
+  }
+
+  .dot-pattern {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Page transition fade */
+main {
+  animation: fadeIn 0.35s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Pulse animation tuning */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--surface-light);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
