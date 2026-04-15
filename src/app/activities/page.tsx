@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { ActivitiesClient } from "./client";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Discover Activities | Voyagio",
   description: "Browse curated tourism experiences across all destinations.",
