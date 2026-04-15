@@ -35,7 +35,6 @@ interface BookingPanelProps {
 
 export function BookingPanel({
   activityId,
-  activityTitle: _activityTitle,
   price,
   currency,
   maxGroupSize,
