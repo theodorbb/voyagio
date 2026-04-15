@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Loader2, MapPin } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 // Leaflet is loaded dynamically to avoid SSR issues
 let L: typeof import("leaflet") | null = null;

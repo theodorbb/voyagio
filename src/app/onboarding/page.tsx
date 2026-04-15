@@ -25,7 +25,7 @@ import {
   Zap,
   Coffee,
 } from "lucide-react";
-import { fadeInUp, fadeIn } from "@/lib/motion";
+import { fadeInUp } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 // ── Step definitions ──

@@ -14,12 +14,10 @@ import {
   XCircle,
   Loader2,
   CheckCircle2,
-  AlertCircle,
   ExternalLink,
   Compass,
   Star,
   Pen,
-  Eye,
 } from "lucide-react";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 import { ReviewModal } from "@/components/reviews/review-modal";
@@ -73,13 +71,6 @@ const STATUS_CONFIG: Record<string, { label: string; color: string; icon: React.
 };
 
 const FILTER_TABS = ["All", "Confirmed", "Completed", "Cancelled"] as const;
-
-function formatDuration(mins: number): string {
-  if (mins < 60) return `${mins}m`;
-  const h = Math.floor(mins / 60);
-  const m = mins % 60;
-  return m > 0 ? `${h}h ${m}m` : `${h}h`;
-}
 
 export function MyBookingsClient({ bookings }: { bookings: BookingItem[] }) {
   const router = useRouter();

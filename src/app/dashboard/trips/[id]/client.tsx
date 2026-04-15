@@ -12,7 +12,6 @@ import {
   Star,
   MapPin,
   Map as MapIcon,
-  CloudSun,
   Utensils,
   Mountain,
   Palette,

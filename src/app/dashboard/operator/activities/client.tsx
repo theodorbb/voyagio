@@ -12,7 +12,6 @@ import {
   Star,
   Clock,
   Users,
-  DollarSign,
   CalendarDays,
   Archive,
   Loader2,

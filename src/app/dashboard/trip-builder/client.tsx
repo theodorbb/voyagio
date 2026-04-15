@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Sparkles,
@@ -165,8 +164,6 @@ interface Props {
 }
 
 export function TripBuilderClient({ destinations }: Props) {
-  const router = useRouter();
-
   // Wizard state
   const [step, setStep] = useState(0);
   const [selectedDest, setSelectedDest] = useState<Destination | null>(null);

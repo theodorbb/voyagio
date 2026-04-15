@@ -22,7 +22,6 @@ import {
 } from "lucide-react";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 import { StatCard } from "@/components/dashboard/stat-card";
-import { cn } from "@/lib/utils";
 import {
   MiniBarChart,
   DonutChart,

@@ -11,7 +11,6 @@ import {
   Users,
   CheckCircle2,
   Sparkles,
-  User,
   Shield,
 } from "lucide-react";
 import { fadeInUp, fadeIn, staggerContainer } from "@/lib/motion";
