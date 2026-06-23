@@ -125,7 +125,7 @@ export function OperatorDashboardClient({
   return (
     <div className="min-h-screen pb-12 pt-24">
       <div className="section-container">
-        {/* Header */}
+
         <motion.div
           variants={fadeInUp}
           initial="hidden"
@@ -143,7 +143,6 @@ export function OperatorDashboardClient({
           </p>
         </motion.div>
 
-        {/* Quick Nav */}
         <motion.div
           variants={staggerContainer}
           initial="hidden"
@@ -173,7 +172,6 @@ export function OperatorDashboardClient({
           ))}
         </motion.div>
 
-        {/* KPI Stats Grid */}
         <motion.div
           variants={staggerContainer}
           initial="hidden"
@@ -214,7 +212,6 @@ export function OperatorDashboardClient({
           />
         </motion.div>
 
-        {/* Secondary KPIs */}
         <motion.div
           variants={staggerContainer}
           initial="hidden"
@@ -273,7 +270,7 @@ export function OperatorDashboardClient({
         </motion.div>
 
         <div className="grid gap-6 lg:grid-cols-3">
-          {/* Recent Bookings — wider */}
+
           <motion.div
             variants={fadeInUp}
             initial="hidden"
@@ -347,9 +344,8 @@ export function OperatorDashboardClient({
             </div>
           </motion.div>
 
-          {/* Sidebar: Category breakdown + Activities */}
           <div className="space-y-6">
-            {/* Category Breakdown */}
+
             {categoryBreakdown.length > 0 && (
               <motion.div
                 variants={fadeInUp}
@@ -404,7 +400,6 @@ export function OperatorDashboardClient({
               </motion.div>
             )}
 
-            {/* Activities */}
             <motion.div
               variants={fadeInUp}
               initial="hidden"
@@ -467,7 +462,6 @@ export function OperatorDashboardClient({
           </div>
         </div>
 
-        {/* Reviews */}
         {recentReviews.length > 0 && (
           <motion.div
             variants={fadeInUp}
@@ -516,7 +510,6 @@ export function OperatorDashboardClient({
           </motion.div>
         )}
 
-        {/* Booking Status Breakdown */}
         <motion.div
           variants={fadeInUp}
           initial="hidden"
@@ -527,7 +520,7 @@ export function OperatorDashboardClient({
             Booking Overview
           </h2>
           <div className="flex items-center gap-3">
-            {/* Visual bar */}
+
             <div className="flex-1">
               <div className="flex h-3 overflow-hidden rounded-full">
                 {stats.completedBookings > 0 && (

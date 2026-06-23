@@ -1,7 +1,9 @@
 "use client";
 
-import Image from "next/image";
+import { useState, useCallback } from "react";
+import { SafeImage } from "@/components/shared/safe-image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
@@ -9,43 +11,28 @@ import {
   Clock,
   Compass,
   Wallet,
-  Star,
   MapPin,
   Map as MapIcon,
-  Utensils,
-  Mountain,
-  Palette,
-  Waves,
-  Camera,
-  Heart,
-  Moon,
-  TreePine,
-  ExternalLink,
+  Pencil,
+  Check,
+  X,
+  AlertTriangle,
+  Loader2,
 } from "lucide-react";
 import { fadeInUp, fadeIn, staggerContainer } from "@/lib/motion";
 import { VoyagioMap } from "@/components/maps/voyagio-map";
 import { WeatherWidget } from "@/components/weather/weather-widget";
-
-// ─── Types ──────────────────────────────────
-
-interface TripActivity {
-  id: string;
-  title: string;
-  slug: string;
-  category: string;
-  price: number;
-  currency: string;
-  duration: number;
-  rating: number;
-  reviewCount: number;
-  difficulty: string | null;
-  images: string;
-  description: string;
-  timeOfDay: string | null;
-  startTime: string | null;
-  latitude: number;
-  longitude: number;
-}
+import {
+  useItineraryEditor,
+  paceTargetFor,
+  formatDuration,
+  ItineraryBoard,
+  ActivityPickerDialog,
+  EditorToast,
+  type AvailableActivity,
+  type EditableDay,
+} from "@/components/trips/itinerary-editor";
+import { TripRefiner } from "@/components/trips/trip-refiner";
 
 interface TripData {
   id: string;
@@ -65,61 +52,89 @@ interface TripData {
   };
   preferences: Record<string, unknown>;
   days: number;
-  itinerary: Array<{
-    dayNumber: number;
-    activities: TripActivity[];
-  }>;
+  itinerary: EditableDay[];
   estimatedCost: number;
   totalActivities: number;
   totalDuration: number;
 }
 
-const CATEGORY_ICONS: Record<string, React.ElementType> = {
-  "Food & Wine": Utensils,
-  Cultural: Palette,
-  Adventure: Mountain,
-  Nature: TreePine,
-  "Water Sports": Waves,
-  Wellness: Heart,
-  Photography: Camera,
-  Nightlife: Moon,
-};
+export function TripDetailClient({
+  trip,
+  availableActivities,
+}: {
+  trip: TripData;
+  availableActivities: AvailableActivity[];
+}) {
+  const router = useRouter();
+  const editor = useItineraryEditor({
+    initialDays: trip.itinerary,
+    availableActivities,
+    paceTarget: paceTargetFor(trip.preferences?.pace),
+  });
+  const { working, editing, setEditing, dirty, totals, showToast } = editor;
 
-const TIME_COLORS: Record<string, string> = {
-  morning: "from-amber-500/20 to-amber-500/5 border-amber-500/20",
-  afternoon: "from-sky-500/20 to-sky-500/5 border-sky-500/20",
-  evening: "from-indigo-500/20 to-indigo-500/5 border-indigo-500/20",
-};
+  const [saveState, setSaveState] = useState<
+    "idle" | "saving" | "saved" | "error"
+  >("idle");
 
-const TIME_LABELS: Record<string, string> = {
-  morning: "Morning",
-  afternoon: "Afternoon",
-  evening: "Evening",
-};
+  const save = useCallback(async () => {
+    setSaveState("saving");
+    try {
+      const res = await fetch(`/api/trips/${trip.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ itinerary: editor.getSavePayload() }),
+      });
 
-function formatDuration(mins: number): string {
-  if (mins < 60) return `${mins}m`;
-  const h = Math.floor(mins / 60);
-  const m = mins % 60;
-  return m > 0 ? `${h}h ${m}m` : `${h}h`;
-}
+      const data = await res.json().catch(() => null);
+      if (!res.ok) {
+        const message =
+          data && typeof data.error === "string"
+            ? data.error
+            : "We couldn't save your itinerary. Please try again.";
+        throw new Error(message);
+      }
 
-// ─── Component ──────────────────────────────
+      setSaveState("saved");
+      editor.setDirty(false);
+      setEditing(false);
+      showToast("Your itinerary has been saved.", "success");
+      router.refresh();
+      window.setTimeout(() => setSaveState("idle"), 2000);
+    } catch (err) {
 
-export function TripDetailClient({ trip }: { trip: TripData }) {
+      setSaveState("error");
+      const message =
+        err instanceof Error && err.message
+          ? err.message
+          : "We couldn't save your itinerary. Please try again.";
+      showToast(message, "error");
+    }
+  }, [trip.id, editor, router, setEditing, showToast]);
+
+  const cancelEdit = useCallback(() => {
+    editor.reset(trip.itinerary);
+    setSaveState("idle");
+    setEditing(false);
+  }, [editor, trip.itinerary, setEditing]);
+
   return (
-    <div className="min-h-screen pb-20">
-      {/* Hero */}
-      <section className="relative h-[35vh] min-h-[280px] overflow-hidden">
-        <Image
+    <div className="min-h-screen pb-28">
+
+      <section className="relative h-[38vh] min-h-[300px] overflow-hidden">
+        <SafeImage
           src={trip.destination.coverImage}
           alt={trip.destination.name}
           fill
           priority
-          className="object-cover"
+          className="scale-105 object-cover blur-[2px]"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-[var(--background)]/60 to-[var(--background)]/20" />
+
+        <div className="absolute inset-0 bg-[var(--background)]/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-[var(--background)]/70 to-[var(--background)]/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[var(--background)]/70 via-transparent to-transparent" />
+        <div className="pointer-events-none absolute inset-0 shadow-[inset_0_0_180px_rgba(0,0,0,0.65)]" />
 
         <div className="section-container relative z-10 flex h-full flex-col justify-between pb-10 pt-28">
           <motion.div variants={fadeIn} initial="hidden" animate="visible">
@@ -141,7 +156,7 @@ export function TripDetailClient({ trip }: { trip: TripData }) {
                 {trip.destination.name}, {trip.destination.country}
               </span>
             </div>
-            <h1 className="font-display text-3xl font-bold text-white md:text-4xl">
+            <h1 className="font-display text-3xl font-bold text-white drop-shadow-lg md:text-4xl">
               {trip.name}
             </h1>
             {trip.summary && (
@@ -154,12 +169,12 @@ export function TripDetailClient({ trip }: { trip: TripData }) {
       </section>
 
       <div className="section-container">
-        {/* Stats bar */}
+
         <motion.div
           variants={fadeInUp}
           initial="hidden"
           animate="visible"
-          className="-mt-6 mb-10 grid grid-cols-2 gap-3 sm:grid-cols-4"
+          className="-mt-6 mb-5 grid grid-cols-2 gap-3 sm:grid-cols-4"
         >
           {[
             {
@@ -170,18 +185,18 @@ export function TripDetailClient({ trip }: { trip: TripData }) {
             },
             {
               label: "Activities",
-              value: trip.totalActivities.toString(),
+              value: totals.count.toString(),
               icon: Compass,
             },
             {
               label: "Est. Budget",
-              value: `€${trip.estimatedCost}`,
+              value: `€${totals.cost}`,
               icon: Wallet,
               sub: "per person",
             },
             {
               label: "Total Time",
-              value: formatDuration(trip.totalDuration),
+              value: formatDuration(totals.duration),
               icon: Clock,
             },
           ].map((stat) => {
@@ -207,117 +222,92 @@ export function TripDetailClient({ trip }: { trip: TripData }) {
           })}
         </motion.div>
 
+        <motion.div
+          variants={fadeInUp}
+          initial="hidden"
+          animate="visible"
+          className="mb-8 flex flex-wrap items-center gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-3"
+        >
+          <div className="flex items-center gap-2 text-xs text-white/40">
+            <Pencil className="h-4 w-4 text-accent" />
+            <span className="font-medium">
+              {editing
+                ? "Editing your itinerary. Drag, move or swap activities to fit your trip."
+                : "Fine-tune this itinerary to match how you like to travel."}
+            </span>
+          </div>
+
+          <div className="ml-auto flex items-center gap-2">
+            {!editing ? (
+              <button
+                onClick={() => setEditing(true)}
+                className="flex items-center gap-1.5 rounded-lg bg-accent px-3 py-1.5 text-xs font-bold text-white transition-all hover:bg-accent/90"
+              >
+                <Pencil className="h-3.5 w-3.5" />
+                Edit itinerary
+              </button>
+            ) : (
+              <>
+                {saveState === "error" && (
+                  <span className="flex items-center gap-1 text-[11px] font-medium text-red-300">
+                    <AlertTriangle className="h-3.5 w-3.5" />
+                    Save failed
+                  </span>
+                )}
+                {saveState === "saved" && (
+                  <span className="flex items-center gap-1 text-[11px] font-medium text-emerald-300">
+                    <Check className="h-3.5 w-3.5" />
+                    Saved
+                  </span>
+                )}
+                {dirty && saveState === "idle" && (
+                  <span className="text-[11px] font-medium text-white/30">
+                    Unsaved changes
+                  </span>
+                )}
+                <button
+                  onClick={cancelEdit}
+                  className="flex items-center gap-1.5 rounded-lg border border-white/[0.08] px-3 py-1.5 text-xs font-medium text-white/50 transition-all hover:text-white"
+                >
+                  <X className="h-3.5 w-3.5" />
+                  Cancel
+                </button>
+                <button
+                  onClick={save}
+                  disabled={!dirty || saveState === "saving"}
+                  className="flex items-center gap-1.5 rounded-lg bg-accent px-3 py-1.5 text-xs font-bold text-white transition-all hover:bg-accent/90 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  {saveState === "saving" ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : saveState === "error" ? (
+                    <AlertTriangle className="h-3.5 w-3.5" />
+                  ) : (
+                    <Check className="h-3.5 w-3.5" />
+                  )}
+                  {saveState === "saving" ? "Saving..." : "Save changes"}
+                </button>
+              </>
+            )}
+          </div>
+        </motion.div>
+
         <div className="grid gap-8 lg:grid-cols-[1fr_300px]">
-          {/* Day-by-day itinerary */}
+
           <motion.div
             variants={staggerContainer}
             initial="hidden"
             animate="visible"
             className="space-y-6"
           >
-            {trip.itinerary.map((day) => (
-              <motion.div key={day.dayNumber} variants={fadeInUp}>
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-accent/20 to-accent-light/10">
-                    <span className="font-display text-sm font-bold text-accent">
-                      {day.dayNumber}
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="font-display text-lg font-bold text-white">
-                      Day {day.dayNumber}
-                    </h3>
-                    <p className="text-xs text-white/30">
-                      {day.activities.length === 0
-                        ? "Free day"
-                        : `${day.activities.length} activit${day.activities.length === 1 ? "y" : "ies"} · €${day.activities.reduce((s, a) => s + a.price, 0)} est.`}
-                    </p>
-                  </div>
-                </div>
-
-                {day.activities.length === 0 ? (
-                  <div className="ml-5 border-l-2 border-white/[0.06] pl-6">
-                    <div className="rounded-xl border border-dashed border-white/[0.06] bg-white/[0.01] p-6 text-center">
-                      <p className="text-xs text-white/20">
-                        Free day — explore on your own!
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="space-y-3 border-l-2 border-white/[0.06] pl-6 ml-5">
-                    {day.activities.map((act, ai) => {
-                      const CatIcon = CATEGORY_ICONS[act.category] || Compass;
-                      const imgs: string[] = JSON.parse(act.images);
-                      const timeOfDay = act.timeOfDay || "morning";
-                      const timeColor = TIME_COLORS[timeOfDay] || TIME_COLORS.morning;
-
-                      return (
-                        <div key={`${day.dayNumber}-${ai}`} className="relative">
-                          <div className="absolute -left-[31px] top-4 h-3 w-3 rounded-full border-2 border-accent/50 bg-[var(--background)]" />
-
-                          <div className="group overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.03] transition-all hover:border-white/[0.12]">
-                            <div className="flex flex-col sm:flex-row">
-                              <div className="relative h-28 w-full shrink-0 sm:h-auto sm:w-32">
-                                <Image
-                                  src={imgs[0]}
-                                  alt={act.title}
-                                  fill
-                                  className="object-cover"
-                                  sizes="(max-width: 640px) 100vw, 128px"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[var(--background)]/80 hidden sm:block" />
-                              </div>
-                              <div className="flex-1 p-4">
-                                <div className="mb-1.5 flex flex-wrap items-center gap-2">
-                                  <span className={`flex items-center gap-1 rounded-full border bg-gradient-to-r px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white/60 ${timeColor}`}>
-                                    {TIME_LABELS[timeOfDay] || timeOfDay}
-                                    {act.startTime && ` · ${act.startTime}`}
-                                  </span>
-                                  <span className="flex items-center gap-1 rounded-full border border-white/[0.06] bg-white/[0.03] px-2 py-0.5 text-[9px] font-medium text-white/40">
-                                    <CatIcon className="h-2.5 w-2.5" />
-                                    {act.category}
-                                  </span>
-                                </div>
-                                <p className="font-display text-sm font-bold text-white">
-                                  {act.title}
-                                </p>
-                                <div className="mt-2 flex items-center gap-3 text-[10px] text-white/30">
-                                  <span className="flex items-center gap-1">
-                                    <Clock className="h-3 w-3" />
-                                    {formatDuration(act.duration)}
-                                  </span>
-                                  {act.rating > 0 && (
-                                    <span className="flex items-center gap-1">
-                                      <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-                                      {act.rating.toFixed(1)}
-                                    </span>
-                                  )}
-                                  <span className="ml-auto flex items-center gap-2">
-                                    <span className="font-display text-sm font-bold text-white">
-                                      {act.currency}{act.price}
-                                    </span>
-                                    <Link
-                                      href={`/activities/${act.slug}`}
-                                      className="flex items-center gap-1 rounded-lg border border-white/[0.08] px-2 py-1 text-[10px] text-white/40 transition-all hover:border-accent/30 hover:text-accent"
-                                    >
-                                      <ExternalLink className="h-2.5 w-2.5" />
-                                      Book
-                                    </Link>
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </motion.div>
-            ))}
+            <TripRefiner
+              editor={editor}
+              lat={trip.destination.latitude}
+              lng={trip.destination.longitude}
+              destinationName={trip.destination.name}
+            />
+            <ItineraryBoard editor={editor} />
           </motion.div>
 
-          {/* Sidebar */}
           <div className="space-y-5">
             <motion.div
               variants={fadeInUp}
@@ -325,7 +315,7 @@ export function TripDetailClient({ trip }: { trip: TripData }) {
               animate="visible"
               className="sticky top-28 space-y-5"
             >
-              {/* Destination card */}
+
               <Link
                 href={`/destinations/${trip.destination.slug}`}
                 className="glass-card-hover flex items-center gap-3 p-4"
@@ -341,7 +331,6 @@ export function TripDetailClient({ trip }: { trip: TripData }) {
                 </div>
               </Link>
 
-              {/* Trip style tags */}
               {Object.keys(trip.preferences).length > 0 && (
                 <div className="glass-card p-5">
                   <h3 className="mb-3 font-display text-sm font-bold text-white">
@@ -365,7 +354,6 @@ export function TripDetailClient({ trip }: { trip: TripData }) {
                 </div>
               )}
 
-              {/* CTA to Trip Builder */}
               <Link
                 href="/dashboard/trip-builder"
                 className="glass-card-hover flex items-center gap-3 p-5"
@@ -383,7 +371,6 @@ export function TripDetailClient({ trip }: { trip: TripData }) {
                 </div>
               </Link>
 
-              {/* Interactive Map */}
               <div className="glass-card p-5">
                 <div className="mb-3 flex items-center gap-2 text-xs text-white/40">
                   <MapIcon className="h-4 w-4 text-accent" />
@@ -397,12 +384,12 @@ export function TripDetailClient({ trip }: { trip: TripData }) {
                   zoom={12}
                   height="h-[220px]"
                   showDayColors
-                  markers={trip.itinerary.flatMap((day) =>
+                  markers={working.flatMap((day) =>
                     day.activities
-                      .filter((a) => a.latitude && a.longitude)
+                      .filter((a) => a.latitude != null && a.longitude != null)
                       .map((a) => ({
-                        lat: a.latitude,
-                        lng: a.longitude,
+                        lat: a.latitude as number,
+                        lng: a.longitude as number,
                         title: a.title,
                         category: a.category,
                         price: a.price,
@@ -414,7 +401,6 @@ export function TripDetailClient({ trip }: { trip: TripData }) {
                 />
               </div>
 
-              {/* Weather Forecast */}
               <WeatherWidget
                 lat={trip.destination.latitude}
                 lng={trip.destination.longitude}
@@ -424,6 +410,11 @@ export function TripDetailClient({ trip }: { trip: TripData }) {
           </div>
         </div>
       </div>
+
+      <ActivityPickerDialog editor={editor} />
+
+      <EditorToast editor={editor} />
     </div>
   );
 }
+

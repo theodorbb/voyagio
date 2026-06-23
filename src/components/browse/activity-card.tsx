@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { Clock, MapPin, Star, Users } from "lucide-react";
 import { fadeInUp } from "@/lib/motion";
+import { SafeImage } from "@/components/shared/safe-image";
 import { FavoriteButton } from "./favorite-button";
 
 interface ActivityCardProps {
@@ -74,25 +74,23 @@ export function ActivityCard({
     >
       <Link
         href={`/activities/${slug}`}
-        className="group relative block overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.03] transition-all duration-500 hover:border-white/[0.15] hover:bg-white/[0.06] hover:shadow-lg hover:shadow-primary-light/5"
+        className="group relative block transform-gpu overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.03] transition-all duration-500 hover:border-white/[0.15] hover:bg-white/[0.06] hover:shadow-lg hover:shadow-black/30"
       >
-        {/* Image */}
+
         <div className="relative aspect-[16/10] overflow-hidden">
-          <Image
+          <SafeImage
             src={coverImage}
             alt={title}
             fill
-            className="object-cover transition-transform duration-700 group-hover:scale-105"
+            className="transform-gpu object-cover transition-transform duration-700 group-hover:scale-105"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-transparent to-transparent" />
 
-          {/* Category */}
           <div className={`absolute left-3 top-3 rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm ${categoryStyle}`}>
             {category}
           </div>
 
-          {/* Favorite */}
           {showFavorite && (
             <div className="absolute right-3 top-3 z-10" onClick={(e) => e.preventDefault()}>
               <FavoriteButton activityId={id} initialFavorited={isFavorited} />
@@ -100,9 +98,8 @@ export function ActivityCard({
           )}
         </div>
 
-        {/* Content */}
         <div className="p-5">
-          {/* Destination */}
+
           <div className="mb-2 flex items-center gap-1.5 text-xs text-white/40">
             <MapPin className="h-3 w-3" />
             <span>{destinationName}</span>
@@ -112,7 +109,6 @@ export function ActivityCard({
             {title}
           </h3>
 
-          {/* Meta row */}
           <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-white/40">
             <span className="flex items-center gap-1">
               <Clock className="h-3 w-3" />
@@ -130,7 +126,6 @@ export function ActivityCard({
             </span>
           </div>
 
-          {/* Footer */}
           <div className="mt-4 flex items-center justify-between border-t border-white/[0.06] pt-3">
             <div className="flex items-center gap-1">
               <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />

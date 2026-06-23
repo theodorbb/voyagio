@@ -76,7 +76,7 @@ export function Navbar() {
       )}
     >
       <nav className="section-container flex h-16 items-center justify-between md:h-20">
-        {/* Logo */}
+
         <Link href="/" className="group flex items-center gap-2.5">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent-light transition-transform duration-300 group-hover:scale-105">
             <Compass className="h-5 w-5 text-white" />
@@ -86,7 +86,6 @@ export function Navbar() {
           </span>
         </Link>
 
-        {/* Desktop Navigation */}
         <div className="hidden items-center gap-1 md:flex">
           {NAV_LINKS.map((link) => {
             const isActive = link.href.startsWith("/#")
@@ -109,7 +108,6 @@ export function Navbar() {
           })}
         </div>
 
-        {/* Auth Area */}
         <div className="hidden items-center gap-3 md:flex">
           {status === "loading" ? (
             <div className="h-9 w-24 animate-pulse rounded-lg bg-white/[0.06]" />
@@ -202,7 +200,6 @@ export function Navbar() {
           )}
         </div>
 
-        {/* Mobile Menu Button */}
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           className="flex h-10 w-10 items-center justify-center rounded-lg text-white/70 transition-colors hover:bg-white/[0.06] hover:text-white md:hidden"
@@ -216,7 +213,6 @@ export function Navbar() {
         </button>
       </nav>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div

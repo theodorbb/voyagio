@@ -28,8 +28,6 @@ import {
 import { fadeInUp } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
-// ── Step definitions ──
-
 const INTERESTS = [
   { id: "adventure", label: "Adventure", icon: Mountain, color: "#F4845F" },
   { id: "cultural", label: "Cultural", icon: Palette, color: "#5FA8D3" },
@@ -81,7 +79,6 @@ export default function OnboardingPage() {
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  // Preference state
   const [interests, setInterests] = useState<string[]>([]);
   const [travelStyle, setTravelStyle] = useState("");
   const [budgetRange, setBudgetRange] = useState("");
@@ -140,7 +137,7 @@ export default function OnboardingPage() {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-24">
-      {/* Background */}
+
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-1/3 top-1/4 h-96 w-96 rounded-full bg-accent/8 blur-[120px]" />
         <div className="absolute bottom-1/4 right-1/3 h-80 w-80 rounded-full bg-primary/10 blur-[100px]" />
@@ -148,7 +145,7 @@ export default function OnboardingPage() {
       </div>
 
       <div className="relative z-10 w-full max-w-xl">
-        {/* Progress bar */}
+
         <div className="mb-8">
           <div className="mb-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -177,7 +174,6 @@ export default function OnboardingPage() {
           </div>
         </div>
 
-        {/* Step content */}
         <AnimatePresence mode="wait">
           <motion.div
             key={step}
@@ -194,7 +190,6 @@ export default function OnboardingPage() {
               <p className="mt-2 text-sm text-white/50">{STEPS[step].subtitle}</p>
             </div>
 
-            {/* Step 0: Interests */}
             {step === 0 && (
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {INTERESTS.map((item) => {
@@ -238,7 +233,6 @@ export default function OnboardingPage() {
               </div>
             )}
 
-            {/* Step 1: Travel Style */}
             {step === 1 && (
               <div className="grid grid-cols-2 gap-3">
                 {TRAVEL_STYLES.map((item) => {
@@ -265,7 +259,6 @@ export default function OnboardingPage() {
               </div>
             )}
 
-            {/* Step 2: Budget */}
             {step === 2 && (
               <div className="grid grid-cols-2 gap-3">
                 {BUDGET_RANGES.map((item) => {
@@ -292,7 +285,6 @@ export default function OnboardingPage() {
               </div>
             )}
 
-            {/* Step 3: Pace */}
             {step === 3 && (
               <div className="grid grid-cols-3 gap-3">
                 {PACE_OPTIONS.map((item) => {
@@ -319,7 +311,6 @@ export default function OnboardingPage() {
               </div>
             )}
 
-            {/* Step 4: Trip Duration */}
             {step === 4 && (
               <div className="grid grid-cols-2 gap-3">
                 {TRIP_DURATION.map((item) => {
@@ -346,7 +337,6 @@ export default function OnboardingPage() {
               </div>
             )}
 
-            {/* Navigation */}
             <div className="mt-8 flex items-center justify-between">
               <button
                 onClick={() => setStep(step - 1)}

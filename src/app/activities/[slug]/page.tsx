@@ -44,7 +44,6 @@ export default async function ActivityDetailPage({ params }: Props) {
     ? JSON.parse(activity.highlights)
     : [];
 
-  // Related activities in same destination (exclude current)
   const related = await prisma.activity.findMany({
     where: {
       destinationId: activity.destinationId,

@@ -46,16 +46,13 @@ export function BookingPanel({
   const [loadingSlots, setLoadingSlots] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Selected values
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
   const [participants, setParticipants] = useState(1);
   const [notes, setNotes] = useState("");
 
-  // Calendar month offset from current
   const [monthOffset, setMonthOffset] = useState(0);
 
-  // Fetch available slots
   useEffect(() => {
     setLoadingSlots(true);
     fetch(`/api/timeslots?activityId=${activityId}`)
@@ -70,7 +67,6 @@ export function BookingPanel({
       });
   }, [activityId]);
 
-  // Group slots by date string (YYYY-MM-DD)
   const slotsByDate = useCallback(() => {
     const map: Record<string, TimeSlot[]> = {};
     for (const s of slots) {
@@ -84,7 +80,6 @@ export function BookingPanel({
   const grouped = slotsByDate();
   const availableDates = new Set(Object.keys(grouped));
 
-  // Calendar helpers
   const now = new Date();
   const calendarMonth = new Date(now.getFullYear(), now.getMonth() + monthOffset, 1);
   const monthName = calendarMonth.toLocaleDateString("en-US", {
@@ -152,7 +147,6 @@ export function BookingPanel({
         return;
       }
 
-      // Navigate to confirmation page
       router.push(`/booking/confirmation?id=${data.booking.id}`);
     } catch {
       setError("Network error. Please try again.");
@@ -164,7 +158,7 @@ export function BookingPanel({
 
   return (
     <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6">
-      {/* Price header */}
+
       <div className="mb-1 flex items-baseline gap-1.5">
         <span className="font-display text-3xl font-bold text-white">
           {currency}
@@ -182,7 +176,7 @@ export function BookingPanel({
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
           >
-            {/* Mini calendar */}
+
             <div className="mt-5 mb-4">
               <div className="mb-3 flex items-center justify-between">
                 <h4 className="flex items-center gap-2 text-sm font-semibold text-white">
@@ -215,7 +209,7 @@ export function BookingPanel({
                 </div>
               ) : (
                 <>
-                  {/* Day headers */}
+
                   <div className="mb-1 grid grid-cols-7 gap-1">
                     {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((d) => (
                       <div
@@ -227,7 +221,6 @@ export function BookingPanel({
                     ))}
                   </div>
 
-                  {/* Calendar grid */}
                   <div className="grid grid-cols-7 gap-1">
                     {calendarDays.map((day, i) => {
                       if (day === null) return <div key={`e-${i}`} />;
@@ -260,7 +253,6 @@ export function BookingPanel({
               )}
             </div>
 
-            {/* Time slots for selected date */}
             <AnimatePresence>
               {selectedDate && slotsForDate.length > 0 && (
                 <motion.div
@@ -303,7 +295,6 @@ export function BookingPanel({
                     })}
                   </div>
 
-                  {/* Continue button */}
                   {selectedSlot && (
                     <motion.button
                       initial={{ opacity: 0, y: 5 }}
@@ -338,7 +329,7 @@ export function BookingPanel({
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
           >
-            {/* Back button */}
+
             <button
               onClick={() => setStep("date")}
               className="mt-4 mb-5 flex items-center gap-1 text-xs text-white/40 transition-colors hover:text-white"
@@ -347,7 +338,6 @@ export function BookingPanel({
               Change date & time
             </button>
 
-            {/* Booking summary */}
             <div className="space-y-3 border-b border-white/[0.06] pb-5 mb-5">
               <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
                 <p className="text-xs text-white/30 mb-1">Date & Time</p>
@@ -368,7 +358,6 @@ export function BookingPanel({
               </div>
             </div>
 
-            {/* Participants */}
             <div className="mb-5">
               <label className="mb-2 flex items-center gap-2 text-sm font-semibold text-white">
                 <Users className="h-4 w-4 text-accent" />
@@ -400,7 +389,6 @@ export function BookingPanel({
               </div>
             </div>
 
-            {/* Notes */}
             <div className="mb-5">
               <label className="mb-2 block text-sm font-semibold text-white">
                 Special Requests{" "}
@@ -416,7 +404,6 @@ export function BookingPanel({
               />
             </div>
 
-            {/* Price breakdown */}
             <div className="space-y-2 rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 mb-5">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-white/40">
@@ -438,7 +425,6 @@ export function BookingPanel({
               </div>
             </div>
 
-            {/* Error */}
             {error && (
               <div className="mb-4 flex items-center gap-2 rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-xs text-red-400">
                 <AlertCircle className="h-3.5 w-3.5 shrink-0" />
@@ -446,7 +432,6 @@ export function BookingPanel({
               </div>
             )}
 
-            {/* Confirm button */}
             <button
               onClick={handleBooking}
               disabled={loading}

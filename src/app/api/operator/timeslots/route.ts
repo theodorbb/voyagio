@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-// GET /api/operator/timeslots — list operator's time slots
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id || session.user.role !== "OPERATOR") {
@@ -49,7 +48,6 @@ export async function GET(req: NextRequest) {
   });
 }
 
-// POST /api/operator/timeslots — create time slots (supports bulk creation)
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id || session.user.role !== "OPERATOR") {
@@ -66,7 +64,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Verify activity belongs to operator
   const activity = await prisma.activity.findUnique({
     where: { id: activityId },
   });
@@ -91,7 +88,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Support single date or array of dates
   const dateList: string[] = Array.isArray(dates) ? dates : [dates];
   if (dateList.length === 0 || !dateList[0]) {
     return NextResponse.json(
@@ -100,7 +96,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Validate dates are not in the past
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 

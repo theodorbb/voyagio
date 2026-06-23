@@ -57,7 +57,6 @@ function WeatherIcon({
   return <Icon className={className} />;
 }
 
-// Simple weather-aware suggestions
 function getSuggestions(condition: string): string[] {
   const lower = condition.toLowerCase();
   if (lower.includes("rain")) {
@@ -88,7 +87,7 @@ function getSuggestions(condition: string): string[] {
       "Comfortable for all-day exploring",
     ];
   }
-  // Sunny / default
+
   return [
     "Perfect for outdoor adventures",
     "Don't forget sun protection",
@@ -121,7 +120,7 @@ export function WeatherWidget({
         const json = await res.json();
         if (!cancelled) setData(json);
       } catch {
-        // Silently fail — component just won't show
+
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -163,7 +162,6 @@ export function WeatherWidget({
           </div>
         </div>
 
-        {/* Mini forecast */}
         <div className="mt-4 flex gap-1">
           {forecast.slice(0, 5).map((day) => (
             <div
@@ -185,10 +183,9 @@ export function WeatherWidget({
     );
   }
 
-  // Full weather card
   return (
     <div className={`glass-card overflow-hidden ${className}`}>
-      {/* Current weather header */}
+
       <div className="border-b border-white/[0.06] bg-gradient-to-r from-primary/5 to-accent/5 p-5">
         <div className="flex items-start justify-between">
           <div>
@@ -212,7 +209,6 @@ export function WeatherWidget({
           </div>
         </div>
 
-        {/* Stats row */}
         <div className="mt-4 flex gap-4">
           <div className="flex items-center gap-1.5 text-xs text-white/40">
             <Droplets className="h-3.5 w-3.5" />
@@ -229,7 +225,6 @@ export function WeatherWidget({
         </div>
       </div>
 
-      {/* 5-day forecast */}
       <div className="p-5">
         <p className="mb-3 text-[10px] font-medium uppercase tracking-wider text-white/30">
           5-Day Forecast
@@ -267,7 +262,6 @@ export function WeatherWidget({
         </div>
       </div>
 
-      {/* Smart suggestions */}
       <div className="border-t border-white/[0.06] bg-white/[0.02] p-5">
         <p className="mb-2.5 text-[10px] font-medium uppercase tracking-wider text-accent/60">
           Weather-Smart Tips

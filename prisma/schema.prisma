@@ -8,29 +8,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ─── Enums (SQLite doesn't support native enums, use String with app-level validation) ───
-
-// Roles: TOURIST, OPERATOR, ADMIN
-// ActivityStatus: DRAFT, ACTIVE, ARCHIVED
-// BookingStatus: CONFIRMED, CANCELLED, COMPLETED
-// TimeSlotStatus: AVAILABLE, FULL, CANCELLED
-// TripStatus: PLANNING, ACTIVE, COMPLETED
-
-// ─── Users ───────────────────────────────────────────────
-
 model User {
   id           String   @id @default(cuid())
   email        String   @unique
   passwordHash String
   name         String
-  role         String   @default("TOURIST") // TOURIST | OPERATOR | ADMIN
+  role         String   @default("TOURIST")
   avatar       String?
   bio          String?
-  preferences  String?  // JSON string: { interests: [], budgetRange: "", travelStyle: "" }
+  preferences  String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  // Operator relationship
   activities Activity[] @relation("OperatorActivities")
 
   bookings  Booking[]
@@ -41,8 +30,6 @@ model User {
   @@map("users")
 }
 
-// ─── Destinations ────────────────────────────────────────
-
 model Destination {
   id          String   @id @default(cuid())
   name        String
@@ -52,7 +39,7 @@ model Destination {
   coverImage  String
   latitude    Float
   longitude   Float
-  highlights  String?  // JSON string: ["Beach", "Nightlife", "History"]
+  highlights  String?
   featured    Boolean  @default(false)
   createdAt   DateTime @default(now())
 
@@ -62,28 +49,26 @@ model Destination {
   @@map("destinations")
 }
 
-// ─── Activities ──────────────────────────────────────────
-
 model Activity {
   id           String   @id @default(cuid())
   title        String
   slug         String   @unique
   description  String
-  category     String   // Adventure, Cultural, Food & Wine, Nature, Water Sports, Wellness, Photography, Nightlife
+  category     String
   price        Float
   currency     String   @default("EUR")
-  duration     Int      // in minutes
-  difficulty   String?  // Easy, Moderate, Challenging
+  duration     Int
+  difficulty   String?
   maxGroupSize Int      @default(20)
-  images       String   // JSON string: ["url1", "url2", ...]
+  images       String
   latitude     Float
   longitude    Float
-  included     String?  // JSON string: ["Guide", "Transport", "Lunch"]
-  highlights   String?  // JSON string: ["Scenic views", "Local culture"]
+  included     String?
+  highlights   String?
   rating       Float    @default(0)
   reviewCount  Int      @default(0)
   featured     Boolean  @default(false)
-  status       String   @default("ACTIVE") // DRAFT | ACTIVE | ARCHIVED
+  status       String   @default("ACTIVE")
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -106,16 +91,14 @@ model Activity {
   @@map("activities")
 }
 
-// ─── Time Slots (Schedule / Availability) ────────────────
-
 model TimeSlot {
   id          String   @id @default(cuid())
-  date        DateTime // Date of the slot
-  startTime   String   // "09:00"
-  endTime     String   // "12:00"
+  date        DateTime
+  startTime   String
+  endTime     String
   capacity    Int
   bookedCount Int      @default(0)
-  status      String   @default("AVAILABLE") // AVAILABLE | FULL | CANCELLED
+  status      String   @default("AVAILABLE")
 
   activityId String
   activity   Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
@@ -127,13 +110,11 @@ model TimeSlot {
   @@map("time_slots")
 }
 
-// ─── Bookings ────────────────────────────────────────────
-
 model Booking {
   id           String   @id @default(cuid())
   participants Int
   totalPrice   Float
-  status       String   @default("CONFIRMED") // CONFIRMED | CANCELLED | COMPLETED
+  status       String   @default("CONFIRMED")
   notes        String?
   createdAt    DateTime @default(now())
 
@@ -154,8 +135,6 @@ model Booking {
   @@map("bookings")
 }
 
-// ─── Favorites ───────────────────────────────────────────
-
 model Favorite {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -170,11 +149,9 @@ model Favorite {
   @@map("favorites")
 }
 
-// ─── Reviews ─────────────────────────────────────────────
-
 model Review {
   id        String   @id @default(cuid())
-  rating    Int      // 1–5
+  rating    Int
   comment   String?
   createdAt DateTime @default(now())
 
@@ -191,17 +168,15 @@ model Review {
   @@map("reviews")
 }
 
-// ─── Trips (Itinerary Plans) ─────────────────────────────
-
 model Trip {
   id          String   @id @default(cuid())
   name        String
   startDate   DateTime
   endDate     DateTime
   budget      Float?
-  status      String   @default("PLANNING") // PLANNING | ACTIVE | COMPLETED
-  preferences String?  // JSON: { travelStyle, interests, pace, groupType, budgetRange }
-  summary     String?  // Generated trip summary text
+  status      String   @default("PLANNING")
+  preferences String?
+  summary     String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -217,15 +192,13 @@ model Trip {
   @@map("trips")
 }
 
-// ─── Trip Activities (Items in an Itinerary) ─────────────
-
 model TripActivity {
   id            String  @id @default(cuid())
-  dayNumber     Int     // Day 1, Day 2, etc.
-  orderIndex    Int     // Order within the day
-  startTime     String? // "09:00"
+  dayNumber     Int
+  orderIndex    Int
+  startTime     String?
   notes         String?
-  timeOfDay     String? // "morning" | "afternoon" | "evening"
+  timeOfDay     String?
 
   tripId String
   trip   Trip   @relation(fields: [tripId], references: [id], onDelete: Cascade)

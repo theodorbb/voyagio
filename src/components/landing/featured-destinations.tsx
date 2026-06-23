@@ -1,8 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { MapPin, Star } from "lucide-react";
+import Link from "next/link";
+import { MapPin, Star, ArrowRight } from "lucide-react";
 import { SectionHeader } from "@/components/shared/section-header";
+import { SafeImage } from "@/components/shared/safe-image";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 import { FEATURED_DESTINATIONS } from "@/lib/constants";
 
@@ -23,16 +25,18 @@ export function FeaturedDestinations() {
           viewport={{ once: true, margin: "-100px" }}
           className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
         >
-          {/* First large card */}
+
           <motion.div
             variants={fadeInUp}
             className="group relative row-span-2 overflow-hidden rounded-2xl sm:col-span-2 lg:col-span-1"
           >
-            <div className="aspect-[3/4] w-full">
-              <img
+            <div className="relative aspect-[3/4] w-full overflow-hidden">
+              <SafeImage
                 src={FEATURED_DESTINATIONS[0].image}
                 alt={FEATURED_DESTINATIONS[0].name}
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                className="transform-gpu object-cover transition-transform duration-700 group-hover:scale-105"
               />
             </div>
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -63,18 +67,19 @@ export function FeaturedDestinations() {
             </div>
           </motion.div>
 
-          {/* Remaining cards */}
-          {FEATURED_DESTINATIONS.slice(1).map((dest) => (
+          {FEATURED_DESTINATIONS.slice(1, 4).map((dest) => (
             <motion.div
               key={dest.name}
               variants={fadeInUp}
               className="group relative overflow-hidden rounded-2xl"
             >
-              <div className="aspect-[16/10] w-full">
-                <img
+              <div className="relative aspect-[16/10] w-full overflow-hidden">
+                <SafeImage
                   src={dest.image}
                   alt={dest.name}
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="transform-gpu object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -103,6 +108,16 @@ export function FeaturedDestinations() {
             </motion.div>
           ))}
         </motion.div>
+
+        <div className="mt-10 flex justify-center">
+          <Link
+            href="/destinations"
+            className="group inline-flex items-center gap-2 rounded-full border border-white/[0.12] bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white/70 transition-all hover:border-accent/40 hover:bg-accent/[0.08] hover:text-white"
+          >
+            View all destinations
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+          </Link>
+        </div>
       </div>
     </section>
   );

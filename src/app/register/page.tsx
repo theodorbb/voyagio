@@ -58,7 +58,7 @@ export default function RegisterPage() {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-24">
-      {/* Background effects */}
+
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute right-1/4 top-1/3 h-96 w-96 rounded-full bg-accent/8 blur-[120px]" />
         <div className="absolute bottom-1/3 left-1/4 h-80 w-80 rounded-full bg-primary/10 blur-[100px]" />
@@ -71,7 +71,7 @@ export default function RegisterPage() {
         animate="visible"
         className="relative z-10 w-full max-w-md"
       >
-        {/* Logo */}
+
         <motion.div variants={fadeInUp} initial="hidden" animate="visible" className="mb-8 text-center">
           <Link href="/" className="inline-flex items-center gap-2.5">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent-light">
@@ -83,7 +83,6 @@ export default function RegisterPage() {
           </Link>
         </motion.div>
 
-        {/* Card */}
         <motion.div
           variants={fadeInUp}
           initial="hidden"
@@ -97,7 +96,6 @@ export default function RegisterPage() {
             </p>
           </div>
 
-          {/* Error message */}
           {error && (
             <div className="mb-4 flex items-center gap-2 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3">
               <AlertCircle className="h-4 w-4 shrink-0 text-red-400" />
@@ -106,7 +104,7 @@ export default function RegisterPage() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Name */}
+
             <div>
               <label htmlFor="name" className="mb-1.5 block text-sm font-medium text-white/70">
                 Full Name
@@ -128,7 +126,6 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Email */}
             <div>
               <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-white/70">
                 Email
@@ -150,7 +147,6 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Password */}
             <div>
               <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-white/70">
                 Password
@@ -177,7 +173,7 @@ export default function RegisterPage() {
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
-              {/* Password strength */}
+
               {password.length > 0 && (
                 <div className="mt-2 space-y-1">
                   {passwordChecks.map((check) => (
@@ -202,7 +198,6 @@ export default function RegisterPage() {
               )}
             </div>
 
-            {/* Submit */}
             <button
               type="submit"
               disabled={loading}
@@ -226,7 +221,6 @@ export default function RegisterPage() {
             By creating an account, you agree to our Terms of Service
           </p>
 
-          {/* Login link */}
           <p className="mt-4 text-center text-sm text-white/40">
             Already have an account?{" "}
             <Link

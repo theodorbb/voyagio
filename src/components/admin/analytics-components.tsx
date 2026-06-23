@@ -2,7 +2,6 @@
 
 import { cn } from "@/lib/utils";
 
-// ─── Mini Bar Chart ─────────────────────────
 interface BarItem {
   label: string;
   value: number;
@@ -43,7 +42,6 @@ export function MiniBarChart({
   );
 }
 
-// ─── Donut Chart (CSS-only) ─────────────────
 interface DonutSegment {
   label: string;
   value: number;
@@ -92,7 +90,7 @@ export function DonutChart({
           background: gradient,
         }}
       >
-        {/* Center cutout */}
+
         <div
           className="absolute inset-0 m-auto flex flex-col items-center justify-center rounded-full bg-[var(--background)]"
           style={{ width: size * 0.65, height: size * 0.65 }}
@@ -105,7 +103,7 @@ export function DonutChart({
           )}
         </div>
       </div>
-      {/* Legend */}
+
       <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
         {segments.map((seg) => (
           <div key={seg.label} className="flex items-center gap-1.5 text-xs">
@@ -119,7 +117,6 @@ export function DonutChart({
   );
 }
 
-// ─── Ranking List ───────────────────────────
 interface RankItem {
   label: string;
   sublabel?: string;
@@ -143,7 +140,7 @@ export function RankingList({
           key={`${item.label}-${i}`}
           className="relative overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3"
         >
-          {/* Background bar */}
+
           {item.barPercent !== undefined && (
             <div
               className={cn(
@@ -178,7 +175,6 @@ export function RankingList({
   );
 }
 
-// ─── Section Panel ──────────────────────────
 export function AnalyticsPanel({
   title,
   subtitle,
@@ -215,7 +211,6 @@ export function AnalyticsPanel({
   );
 }
 
-// ─── Status Distribution Bar ────────────────
 export function StatusBar({
   segments,
   className,
@@ -256,7 +251,6 @@ export function StatusBar({
   );
 }
 
-// ─── KPI Mini Card ──────────────────────────
 export function KpiMini({
   label,
   value,
@@ -285,7 +279,6 @@ export function KpiMini({
   );
 }
 
-// ─── Activity Feed Item ─────────────────────
 export function FeedItem({
   icon: Icon,
   iconColor,

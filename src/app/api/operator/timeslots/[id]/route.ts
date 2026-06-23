@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-// PATCH /api/operator/timeslots/[id] — cancel or update a time slot
 export async function PATCH(
   req: NextRequest,
   { params }: { params: { id: string } }

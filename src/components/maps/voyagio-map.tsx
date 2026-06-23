@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
 
-// Leaflet is loaded dynamically to avoid SSR issues
 let L: typeof import("leaflet") | null = null;
 
 interface Marker {
@@ -28,16 +27,16 @@ interface VoyagioMapProps {
 }
 
 const DAY_COLORS = [
-  "#F4845F", // accent
-  "#5FA8D3", // primary-light
-  "#A78BFA", // purple
-  "#22C55E", // green
-  "#F7B267", // amber
-  "#3B82F6", // blue
-  "#EC4899", // pink
-  "#14B8A6", // teal
-  "#F43F5E", // rose
-  "#8B5CF6", // violet
+  "#F4845F",
+  "#5FA8D3",
+  "#A78BFA",
+  "#22C55E",
+  "#F7B267",
+  "#3B82F6",
+  "#EC4899",
+  "#14B8A6",
+  "#F43F5E",
+  "#8B5CF6",
 ];
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -89,7 +88,6 @@ export function VoyagioMap({
       if (!L) {
         const leaflet = await import("leaflet");
         L = leaflet.default || leaflet;
-        // Load leaflet CSS
         if (!document.querySelector('link[href*="leaflet.css"]')) {
           const link = document.createElement("link");
           link.rel = "stylesheet";
@@ -100,7 +98,6 @@ export function VoyagioMap({
 
       if (!mounted || !mapRef.current) return;
 
-      // Destroy existing map
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
@@ -111,7 +108,6 @@ export function VoyagioMap({
         attributionControl: false,
       }).setView(center, zoom);
 
-      // Dark map tiles (CartoDB Dark Matter)
       L.tileLayer(
         "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
         {
@@ -120,10 +116,8 @@ export function VoyagioMap({
         }
       ).addTo(map);
 
-      // Add zoom control to bottom-right
       L.control.zoom({ position: "bottomright" }).addTo(map);
 
-      // Add attribution
       L.control
         .attribution({ position: "bottomleft", prefix: false })
         .addAttribution(
@@ -131,7 +125,6 @@ export function VoyagioMap({
         )
         .addTo(map);
 
-      // Add markers
       const bounds: [number, number][] = [];
 
       for (const m of markers) {
@@ -166,7 +159,6 @@ export function VoyagioMap({
         bounds.push([m.lat, m.lng]);
       }
 
-      // Fit bounds if multiple markers
       if (bounds.length > 1) {
         map.fitBounds(bounds, { padding: [40, 40], maxZoom: 15 });
       }
@@ -184,7 +176,7 @@ export function VoyagioMap({
         mapInstanceRef.current = null;
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [center[0], center[1], zoom, markers.length]);
 
   return (

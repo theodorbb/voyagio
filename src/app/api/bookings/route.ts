@@ -22,7 +22,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Valid participants count required (1-20)" }, { status: 400 });
   }
 
-  // Fetch activity and time slot
   const [activity, timeSlot] = await Promise.all([
     prisma.activity.findUnique({ where: { id: activityId } }),
     prisma.timeSlot.findUnique({ where: { id: timeSlotId } }),
@@ -46,7 +45,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Create booking and update slot in a transaction
   const booking = await prisma.$transaction(async (tx) => {
     const newBooking = await tx.booking.create({
       data: {

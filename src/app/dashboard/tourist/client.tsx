@@ -76,7 +76,7 @@ export function TouristDashboardClient({
   return (
     <div className="min-h-screen pb-12 pt-24">
       <div className="section-container">
-        {/* Header */}
+
         <motion.div
           variants={fadeInUp}
           initial="hidden"
@@ -91,7 +91,6 @@ export function TouristDashboardClient({
           </p>
         </motion.div>
 
-        {/* Onboarding CTA */}
         {!hasPreferences && (
           <motion.div
             variants={fadeInUp}
@@ -121,7 +120,6 @@ export function TouristDashboardClient({
           </motion.div>
         )}
 
-        {/* Stats Grid */}
         <motion.div
           variants={staggerContainer}
           initial="hidden"
@@ -161,7 +159,6 @@ export function TouristDashboardClient({
           />
         </motion.div>
 
-        {/* Quick Nav */}
         <motion.div
           variants={fadeInUp}
           initial="hidden"
@@ -198,9 +195,8 @@ export function TouristDashboardClient({
           </Link>
         </motion.div>
 
-        {/* Two columns: Bookings + Trips */}
         <div className="grid gap-6 lg:grid-cols-2">
-          {/* Recent Bookings */}
+
           <motion.div
             variants={fadeInUp}
             initial="hidden"
@@ -260,7 +256,6 @@ export function TouristDashboardClient({
             )}
           </motion.div>
 
-          {/* Trips */}
           <motion.div
             variants={fadeInUp}
             initial="hidden"
@@ -331,7 +326,6 @@ export function TouristDashboardClient({
           </motion.div>
         </div>
 
-        {/* Favorites */}
         {favorites.length > 0 && (
           <motion.div
             variants={fadeInUp}

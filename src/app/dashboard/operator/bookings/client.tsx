@@ -96,7 +96,6 @@ export function BookingsManagementClient({ activities }: Props) {
     setUpdating(null);
   };
 
-  // Summary stats
   const confirmed = bookings.filter((b) => b.status === "CONFIRMED").length;
   const completed = bookings.filter((b) => b.status === "COMPLETED").length;
   const totalRevenue = bookings
@@ -109,7 +108,7 @@ export function BookingsManagementClient({ activities }: Props) {
   return (
     <div className="min-h-screen pb-12 pt-24">
       <div className="section-container">
-        {/* Header */}
+
         <motion.div
           variants={fadeInUp}
           initial="hidden"
@@ -131,7 +130,6 @@ export function BookingsManagementClient({ activities }: Props) {
           </p>
         </motion.div>
 
-        {/* Summary cards */}
         <motion.div
           variants={staggerContainer}
           initial="hidden"
@@ -174,7 +172,6 @@ export function BookingsManagementClient({ activities }: Props) {
           </motion.div>
         </motion.div>
 
-        {/* Filters */}
         <div className="mb-6 flex flex-wrap gap-3">
           <select
             value={statusFilter}
@@ -210,7 +207,6 @@ export function BookingsManagementClient({ activities }: Props) {
           </select>
         </div>
 
-        {/* Booking list */}
         {loading ? (
           <div className="flex items-center justify-center py-20">
             <Loader2 className="h-6 w-6 animate-spin text-white/20" />
@@ -240,7 +236,7 @@ export function BookingsManagementClient({ activities }: Props) {
                   className="glass-card overflow-hidden transition-all duration-300 hover:border-white/[0.12]"
                 >
                   <div className="flex flex-col gap-4 p-5 md:flex-row md:items-center">
-                    {/* Booking info */}
+
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
                         <Link
@@ -291,7 +287,6 @@ export function BookingsManagementClient({ activities }: Props) {
                       )}
                     </div>
 
-                    {/* Actions */}
                     {booking.status === "CONFIRMED" && (
                       <div className="flex shrink-0 gap-2">
                         <button

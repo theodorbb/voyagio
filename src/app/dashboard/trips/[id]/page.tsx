@@ -53,13 +53,36 @@ export default async function TripDetailPage({ params }: Props) {
 
   if (!trip || trip.userId !== user.id) notFound();
 
-  // Parse preferences
+  const destinationActivities = await prisma.activity.findMany({
+    where: { destinationId: trip.destinationId, status: "ACTIVE" },
+    orderBy: { rating: "desc" },
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+      category: true,
+      price: true,
+      currency: true,
+      duration: true,
+      rating: true,
+      reviewCount: true,
+      difficulty: true,
+      images: true,
+      description: true,
+      latitude: true,
+      longitude: true,
+    },
+  });
+
   let preferences: Record<string, unknown> = {};
   if (trip.preferences) {
-    try { preferences = JSON.parse(trip.preferences); } catch { /* ignore */ }
+    try {
+      preferences = JSON.parse(trip.preferences);
+    } catch {
+      preferences = {};
+    }
   }
 
-  // Group activities by day
   const dayMap: Record<number, Array<{
     id: string;
     title: string;
@@ -125,6 +148,7 @@ export default async function TripDetailPage({ params }: Props) {
         totalActivities,
         totalDuration,
       }}
+      availableActivities={destinationActivities}
     />
   );
 }

@@ -7,7 +7,7 @@ export function Footer() {
     <footer className="border-t border-white/[0.06] bg-[var(--background)]">
       <div className="section-container py-16">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-4">
-          {/* Brand */}
+
           <div className="md:col-span-1">
             <Link href="/" className="group flex items-center gap-2.5">
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent-light">
@@ -23,7 +23,6 @@ export function Footer() {
             </p>
           </div>
 
-          {/* Navigation */}
           <div>
             <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white/30">
               Explore
@@ -42,7 +41,6 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* For Operators */}
           <div>
             <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white/30">
               For Operators
@@ -66,7 +64,6 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Contact */}
           <div>
             <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white/30">
               Connect
@@ -86,7 +83,6 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Bottom Bar */}
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/[0.06] pt-8 md:flex-row">
           <p className="text-xs text-white/30">
             &copy; {new Date().getFullYear()} Voyagio. Dissertation Project — Tourism Activity Management Platform.

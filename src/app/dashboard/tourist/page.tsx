@@ -40,7 +40,6 @@ export default async function TouristDashboardPage() {
     totalReviews: await prisma.review.count({ where: { userId: user.id } }),
   };
 
-  // Check if user has preferences set
   const dbUser = await prisma.user.findUnique({
     where: { id: user.id },
     select: { preferences: true },

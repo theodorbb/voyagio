@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { SafeImage } from "@/components/shared/safe-image";
 import {
   ArrowLeft,
   Clock,
@@ -109,9 +109,9 @@ export function ActivityDetailClient({
 
   return (
     <div className="min-h-screen">
-      {/* Hero */}
+
       <section className="relative h-[45vh] min-h-[360px] overflow-hidden">
-        <Image
+        <SafeImage
           src={activity.images[0]}
           alt={activity.title}
           fill
@@ -121,7 +121,6 @@ export function ActivityDetailClient({
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-[var(--background)]/50 to-transparent" />
 
-        {/* Back + Favorite */}
         <div className="section-container relative z-10 flex h-full flex-col justify-between pb-10 pt-28">
           <motion.div
             variants={fadeIn}
@@ -192,12 +191,11 @@ export function ActivityDetailClient({
         </div>
       </section>
 
-      {/* Content */}
       <section className="section-container py-12">
         <div className="grid gap-10 lg:grid-cols-3">
-          {/* Main content — 2 cols */}
+
           <div className="space-y-12 lg:col-span-2">
-            {/* Description */}
+
             <motion.div
               variants={fadeInUp}
               initial="hidden"
@@ -212,7 +210,6 @@ export function ActivityDetailClient({
               </p>
             </motion.div>
 
-            {/* Highlights */}
             {activity.highlights.length > 0 && (
               <motion.div
                 variants={fadeInUp}
@@ -240,7 +237,6 @@ export function ActivityDetailClient({
               </motion.div>
             )}
 
-            {/* What's Included */}
             {activity.included.length > 0 && (
               <motion.div
                 variants={fadeInUp}
@@ -265,7 +261,6 @@ export function ActivityDetailClient({
               </motion.div>
             )}
 
-            {/* Gallery */}
             {activity.images.length > 1 && (
               <motion.div
                 variants={fadeInUp}
@@ -282,7 +277,7 @@ export function ActivityDetailClient({
                       key={i}
                       className="relative aspect-[16/10] overflow-hidden rounded-xl border border-white/[0.06]"
                     >
-                      <Image
+                      <SafeImage
                         src={img}
                         alt={`${activity.title} - ${i + 2}`}
                         fill
@@ -295,7 +290,6 @@ export function ActivityDetailClient({
               </motion.div>
             )}
 
-            {/* Reviews */}
             <motion.div
               variants={fadeInUp}
               initial="hidden"
@@ -376,9 +370,8 @@ export function ActivityDetailClient({
             </motion.div>
           </div>
 
-          {/* Sidebar */}
           <div className="space-y-6">
-            {/* Booking card */}
+
             <motion.div
               variants={fadeInUp}
               initial="hidden"
@@ -394,7 +387,6 @@ export function ActivityDetailClient({
                 maxGroupSize={activity.maxGroupSize}
               />
 
-              {/* Activity details */}
               <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6">
                 <div className="space-y-3">
                   <div className="flex items-center justify-between text-sm">
@@ -426,7 +418,6 @@ export function ActivityDetailClient({
                 </div>
               </div>
 
-              {/* Operator info */}
               <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6">
                 <div className="mb-3 flex items-center gap-2 text-xs text-white/30">
                   <Shield className="h-3.5 w-3.5" />
@@ -452,7 +443,6 @@ export function ActivityDetailClient({
                 )}
               </div>
 
-              {/* Location map */}
               {activity.latitude && activity.longitude && (
                 <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4">
                   <div className="mb-3 flex items-center gap-2 text-xs text-white/30">
@@ -475,7 +465,6 @@ export function ActivityDetailClient({
                 </div>
               )}
 
-              {/* Destination link */}
               <Link
                 href={`/destinations/${activity.destination.slug}`}
                 className="flex items-center gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5 transition-all duration-300 hover:border-white/[0.15] hover:bg-white/[0.06]"
@@ -494,7 +483,6 @@ export function ActivityDetailClient({
           </div>
         </div>
 
-        {/* Related Activities */}
         {relatedActivities.length > 0 && (
           <div className="mt-20">
             <motion.div

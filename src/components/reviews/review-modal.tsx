@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// ─── Interactive Star Rating ────────────────
 export function StarRatingInput({
   value,
   onChange,
@@ -59,13 +58,11 @@ export function StarRatingInput({
   );
 }
 
-// ─── Review Modal ───────────────────────────
 interface ReviewModalProps {
   isOpen: boolean;
   onClose: () => void;
   bookingId: string;
   activityTitle: string;
-  // For editing
   existingReview?: {
     id: string;
     rating: number;
@@ -143,20 +140,19 @@ export function ReviewModal({
           exit={{ opacity: 0 }}
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
         >
-          {/* Backdrop */}
+
           <div
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={!loading ? onClose : undefined}
           />
 
-          {/* Modal */}
           <motion.div
             initial={{ opacity: 0, y: 20, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.97 }}
             className="relative w-full max-w-lg rounded-2xl border border-white/[0.08] bg-[var(--surface-dark)] p-8 shadow-2xl"
           >
-            {/* Close */}
+
             <button
               onClick={onClose}
               disabled={loading}
@@ -166,7 +162,6 @@ export function ReviewModal({
             </button>
 
             {success ? (
-              /* Success state */
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -183,7 +178,6 @@ export function ReviewModal({
                 </p>
               </motion.div>
             ) : (
-              /* Form */
               <form onSubmit={handleSubmit}>
                 <div className="mb-6 flex items-center gap-2">
                   <Pen className="h-4 w-4 text-accent" />
@@ -196,12 +190,10 @@ export function ReviewModal({
                   How was <span className="font-medium text-white/60">{activityTitle}</span>?
                 </p>
 
-                {/* Star rating */}
                 <div className="mb-8 flex justify-center">
                   <StarRatingInput value={rating} onChange={setRating} />
                 </div>
 
-                {/* Comment */}
                 <div className="mb-6">
                   <label className="mb-2 block text-xs font-medium text-white/40">
                     Share your thoughts (optional)
@@ -219,14 +211,12 @@ export function ReviewModal({
                   </p>
                 </div>
 
-                {/* Error */}
                 {error && (
                   <p className="mb-4 rounded-lg border border-red-500/20 bg-red-500/5 px-4 py-2 text-xs text-red-400">
                     {error}
                   </p>
                 )}
 
-                {/* Actions */}
                 <div className="flex items-center justify-end gap-3">
                   <button
                     type="button"

@@ -9,7 +9,6 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // ─── Platform KPIs ────────────────────────
   const [
     totalUsers,
     totalTourists,
@@ -48,7 +47,6 @@ export async function GET() {
     prisma.favorite.count(),
   ]);
 
-  // ─── Bookings by Destination ──────────────
   const destinations = await prisma.destination.findMany({
     select: {
       id: true,
@@ -95,7 +93,6 @@ export async function GET() {
     };
   });
 
-  // ─── Bookings by Category ─────────────────
   const categoryData = await prisma.activity.groupBy({
     by: ["category"],
     _count: true,
@@ -124,7 +121,6 @@ export async function GET() {
     })
   );
 
-  // ─── Top Activities ───────────────────────
   const topActivities = await prisma.activity.findMany({
     orderBy: { reviewCount: "desc" },
     take: 10,
@@ -178,7 +174,6 @@ export async function GET() {
     revenue: Math.round(a.bookings.reduce((s, b) => s + b.totalPrice, 0)),
   }));
 
-  // ─── Operator Performance ─────────────────
   const operators = await prisma.user.findMany({
     where: { role: "OPERATOR" },
     select: {
@@ -233,7 +228,6 @@ export async function GET() {
     })
     .sort((a, b) => b.revenue - a.revenue);
 
-  // ─── Top Tourists ─────────────────────────
   const tourists = await prisma.user.findMany({
     where: { role: "TOURIST" },
     select: {
@@ -255,7 +249,6 @@ export async function GET() {
     trips: t._count.trips,
   }));
 
-  // ─── Recent Activity Feed ─────────────────
   const [recentBookings, recentReviews, recentUsers] = await Promise.all([
     prisma.booking.findMany({
       orderBy: { createdAt: "desc" },
@@ -290,7 +283,6 @@ export async function GET() {
     }),
   ]);
 
-  // ─── Utilization ──────────────────────────
   const slotStats = await prisma.timeSlot.aggregate({
     where: { status: { not: "CANCELLED" } },
     _sum: { capacity: true, bookedCount: true },

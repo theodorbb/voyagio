@@ -3,27 +3,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-/**
- * SMART TRIP GENERATION ALGORITHM
- * ================================
- * A rule-based heuristic planner that creates personalized itineraries.
- *
- * Scoring formula for each activity:
- *   score = interestMatch + categoryBonus + ratingScore + priceScore + diversityBonus
- *
- * - interestMatch:  +30 if activity category matches user interests
- * - categoryBonus:  +20 if activity category matches preferred style
- * - ratingScore:    +0..15 based on normalized rating (0-5 → 0-15)
- * - priceScore:     +0..10 inversely proportional to price vs budget
- * - diversityBonus: +15 if category not yet scheduled that day
- *
- * Day assignment considers:
- * - pace (light=2/day, balanced=3/day, packed=4/day)
- * - duration balance (morning/afternoon/evening)
- * - category diversity across days
- * - total budget constraint
- */
-
 const STYLE_CATEGORY_MAP: Record<string, string[]> = {
   relaxed: ["Wellness", "Nature", "Food & Wine"],
   cultural: ["Cultural", "Photography"],
@@ -50,7 +29,7 @@ const TIME_SLOTS = [
 interface GenerateInput {
   destinationSlug: string;
   days: number;
-  budgetRange: string; // "budget" | "moderate" | "premium" | "luxury"
+  budgetRange: string;
   travelStyle: string;
   interests: string[];
   pace: string;
@@ -85,7 +64,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid input" }, { status: 400 });
   }
 
-  // 1. Fetch destination
   const destination = await prisma.destination.findUnique({
     where: { slug: destinationSlug },
   });
@@ -93,7 +71,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Destination not found" }, { status: 404 });
   }
 
-  // 2. Fetch all active activities for this destination
   const activities = await prisma.activity.findMany({
     where: { destinationId: destination.id, status: "ACTIVE" },
     orderBy: { rating: "desc" },
@@ -103,7 +80,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "No activities available" }, { status: 404 });
   }
 
-  // 3. Score each activity
   const priceRange = budgetMultiplier(budgetRange);
   const styleCategories = STYLE_CATEGORY_MAP[travelStyle] || [];
   const activitiesPerDay = PACE_ACTIVITIES[pace] || 3;
@@ -111,7 +87,6 @@ export async function POST(req: NextRequest) {
   const scored = activities.map((act) => {
     let score = 0;
 
-    // Interest match (+30)
     const interestCategories = interests.map((i: string) => {
       const map: Record<string, string> = {
         food: "Food & Wine",
@@ -128,30 +103,24 @@ export async function POST(req: NextRequest) {
     });
     if (interestCategories.includes(act.category)) score += 30;
 
-    // Style match (+20)
     if (styleCategories.includes(act.category)) score += 20;
 
-    // Rating score (+0..15)
     score += (act.rating / 5) * 15;
 
-    // Price fit (+0..10) - activities within budget range score higher
     if (act.price >= priceRange.min && act.price <= priceRange.max) {
       score += 10;
     } else if (act.price < priceRange.min) {
       score += 3;
     }
 
-    // Duration preference - shorter activities for packed pace
     if (pace === "packed" && act.duration <= 180) score += 5;
     if (pace === "light" && act.duration >= 180) score += 5;
 
     return { ...act, score };
   });
 
-  // Sort by score descending
   scored.sort((a, b) => b.score - a.score);
 
-  // 4. Assign activities to days with diversity
   const totalSlots = days * activitiesPerDay;
   const selected = scored.slice(0, Math.min(totalSlots, scored.length));
 
@@ -179,17 +148,14 @@ export async function POST(req: NextRequest) {
     itinerary.push({ dayNumber: d, activities: [] });
   }
 
-  // Track used activity IDs to avoid duplicates
   const usedIds = new Set<string>();
-  // Track categories per day for diversity bonus
+
   const dayCats: Record<number, Set<string>> = {};
   for (let d = 1; d <= days; d++) dayCats[d] = new Set();
 
-  // Fill days round-robin with diversity consideration
   for (const act of selected) {
     if (usedIds.has(act.id)) continue;
 
-    // Find the best day (fewest activities, most diversity)
     let bestDay = 1;
     let bestScore = -Infinity;
 
@@ -198,7 +164,7 @@ export async function POST(req: NextRequest) {
       if (day.activities.length >= activitiesPerDay) continue;
 
       let dayScore = (activitiesPerDay - day.activities.length) * 10;
-      if (!dayCats[d].has(act.category)) dayScore += 15; // diversity bonus
+      if (!dayCats[d].has(act.category)) dayScore += 15;
 
       if (dayScore > bestScore) {
         bestScore = dayScore;
@@ -233,7 +199,6 @@ export async function POST(req: NextRequest) {
     dayCats[bestDay].add(act.category);
   }
 
-  // 5. Calculate totals
   const totalActivities = itinerary.reduce((sum, d) => sum + d.activities.length, 0);
   const estimatedCost = itinerary.reduce(
     (sum, d) => sum + d.activities.reduce((s, a) => s + a.price, 0),
@@ -244,7 +209,6 @@ export async function POST(req: NextRequest) {
     0
   );
 
-  // 6. Generate trip name and summary
   const styleLabel = travelStyle.charAt(0).toUpperCase() + travelStyle.slice(1);
   const tripName = `${styleLabel} ${destination.name} — ${days} Day${days > 1 ? "s" : ""}`;
 

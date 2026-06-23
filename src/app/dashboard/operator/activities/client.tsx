@@ -125,7 +125,7 @@ export function ActivitiesManagementClient({ destinations }: Props) {
   return (
     <div className="min-h-screen pb-12 pt-24">
       <div className="section-container">
-        {/* Header */}
+
         <motion.div
           variants={fadeInUp}
           initial="hidden"
@@ -159,7 +159,6 @@ export function ActivitiesManagementClient({ destinations }: Props) {
           </div>
         </motion.div>
 
-        {/* Filters */}
         <div className="mb-6 flex gap-2">
           {[null, "ACTIVE", "DRAFT", "ARCHIVED"].map((s) => (
             <button
@@ -184,7 +183,6 @@ export function ActivitiesManagementClient({ destinations }: Props) {
           ))}
         </div>
 
-        {/* Activity List */}
         {loading ? (
           <div className="flex items-center justify-center py-20">
             <Loader2 className="h-6 w-6 animate-spin text-white/20" />
@@ -215,7 +213,7 @@ export function ActivitiesManagementClient({ destinations }: Props) {
                   className="glass-card overflow-hidden transition-all duration-300 hover:border-white/[0.12]"
                 >
                   <div className="flex flex-col gap-4 p-5 md:flex-row md:items-center">
-                    {/* Image + info */}
+
                     <div className="flex min-w-0 flex-1 items-center gap-4">
                       <div
                         className="h-16 w-16 shrink-0 rounded-xl bg-cover bg-center"
@@ -256,7 +254,6 @@ export function ActivitiesManagementClient({ destinations }: Props) {
                       </div>
                     </div>
 
-                    {/* Stats */}
                     <div className="flex flex-wrap items-center gap-4 text-xs">
                       <div className="text-center">
                         <p className="font-semibold text-white">
@@ -295,7 +292,6 @@ export function ActivitiesManagementClient({ destinations }: Props) {
                       </div>
                     </div>
 
-                    {/* Actions */}
                     <div className="flex shrink-0 items-center gap-2">
                       {act.status !== "ARCHIVED" && (
                         <button
@@ -345,7 +341,6 @@ export function ActivitiesManagementClient({ destinations }: Props) {
           </motion.div>
         )}
 
-        {/* Create Activity Modal */}
         {showCreate && (
           <CreateActivityModal
             destinations={destinations}
@@ -361,7 +356,6 @@ export function ActivitiesManagementClient({ destinations }: Props) {
   );
 }
 
-// ─── Create Activity Modal ──────────────────
 function CreateActivityModal({
   destinations,
   onClose,

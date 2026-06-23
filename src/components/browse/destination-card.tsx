@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { MapPin, Star } from "lucide-react";
 import { fadeInUp } from "@/lib/motion";
+import { SafeImage } from "@/components/shared/safe-image";
 
 interface DestinationCardProps {
   name: string;
@@ -41,15 +41,15 @@ export function DestinationCard({
     >
       <Link
         href={`/destinations/${slug}`}
-        className="group relative block overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.03] transition-all duration-500 hover:border-white/[0.15] hover:bg-white/[0.06] hover:shadow-lg hover:shadow-primary-light/5"
+        className="group relative block transform-gpu overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.03] transition-all duration-500 hover:border-white/[0.15] hover:bg-white/[0.06] hover:shadow-lg hover:shadow-black/30"
       >
-        {/* Image */}
+
         <div className="relative aspect-[16/10] overflow-hidden">
-          <Image
+          <SafeImage
             src={coverImage}
             alt={name}
             fill
-            className="object-cover transition-transform duration-700 group-hover:scale-105"
+            className="transform-gpu object-cover transition-transform duration-700 group-hover:scale-105"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-transparent to-transparent" />
@@ -60,14 +60,12 @@ export function DestinationCard({
             </div>
           )}
 
-          {/* Rating badge */}
           <div className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-black/50 px-2 py-1 backdrop-blur-sm">
             <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
             <span className="text-xs font-semibold text-white">{rating.toFixed(1)}</span>
           </div>
         </div>
 
-        {/* Content */}
         <div className="p-5">
           <div className="mb-2 flex items-center gap-1.5 text-xs text-white/40">
             <MapPin className="h-3 w-3" />
@@ -82,7 +80,6 @@ export function DestinationCard({
             {description}
           </p>
 
-          {/* Highlights tags */}
           {highlights && highlights.length > 0 && (
             <div className="mt-3 flex flex-wrap gap-1.5">
               {highlights.slice(0, 3).map((h) => (
@@ -96,7 +93,6 @@ export function DestinationCard({
             </div>
           )}
 
-          {/* Footer */}
           <div className="mt-4 flex items-center justify-between border-t border-white/[0.06] pt-3">
             <span className="text-xs text-white/30">
               {activityCount} {activityCount === 1 ? "activity" : "activities"}

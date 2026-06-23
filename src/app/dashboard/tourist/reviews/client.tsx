@@ -42,7 +42,7 @@ export function MyReviewsClient({ reviews }: { reviews: ReviewItem[] }) {
   return (
     <div className="min-h-screen pt-24 pb-20">
       <div className="section-container max-w-4xl">
-        {/* Header */}
+
         <motion.div
           variants={fadeInUp}
           initial="hidden"
@@ -99,7 +99,7 @@ export function MyReviewsClient({ reviews }: { reviews: ReviewItem[] }) {
                 className="group overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.03] transition-all hover:border-white/[0.12]"
               >
                 <div className="flex flex-col sm:flex-row">
-                  {/* Image */}
+
                   <div className="relative h-36 w-full shrink-0 sm:h-auto sm:w-40">
                     <Image
                       src={review.activity.coverImage}
@@ -111,7 +111,6 @@ export function MyReviewsClient({ reviews }: { reviews: ReviewItem[] }) {
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[var(--background)]/80 hidden sm:block" />
                   </div>
 
-                  {/* Content */}
                   <div className="flex flex-1 flex-col justify-between p-5">
                     <div>
                       <div className="mb-2 flex items-center gap-2">
@@ -143,7 +142,6 @@ export function MyReviewsClient({ reviews }: { reviews: ReviewItem[] }) {
                       )}
                     </div>
 
-                    {/* Footer */}
                     <div className="mt-4 flex items-center justify-between border-t border-white/[0.04] pt-3">
                       <p className="text-[10px] text-white/20">
                         Reviewed{" "}
@@ -189,7 +187,6 @@ export function MyReviewsClient({ reviews }: { reviews: ReviewItem[] }) {
           </motion.div>
         )}
 
-        {/* Edit Modal */}
         {editTarget && (
           <ReviewModal
             isOpen={!!editTarget}

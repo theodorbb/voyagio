@@ -39,7 +39,6 @@ function LoginContent() {
         return;
       }
 
-      // Fetch session to determine role-based redirect
       const res = await fetch("/api/auth/session");
       const session = await res.json();
       const role = session?.user?.role;
@@ -62,7 +61,7 @@ function LoginContent() {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-24">
-      {/* Background effects */}
+
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-primary/10 blur-[120px]" />
         <div className="absolute bottom-1/4 right-1/4 h-80 w-80 rounded-full bg-accent/8 blur-[100px]" />
@@ -75,7 +74,7 @@ function LoginContent() {
         animate="visible"
         className="relative z-10 w-full max-w-md"
       >
-        {/* Logo */}
+
         <motion.div variants={fadeInUp} initial="hidden" animate="visible" className="mb-8 text-center">
           <Link href="/" className="inline-flex items-center gap-2.5">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent-light">
@@ -87,7 +86,6 @@ function LoginContent() {
           </Link>
         </motion.div>
 
-        {/* Card */}
         <motion.div
           variants={fadeInUp}
           initial="hidden"
@@ -101,7 +99,6 @@ function LoginContent() {
             </p>
           </div>
 
-          {/* Success message after registration */}
           {registered && (
             <div className="mb-4 flex items-center gap-2 rounded-xl border border-green-500/20 bg-green-500/10 px-4 py-3">
               <div className="h-2 w-2 rounded-full bg-green-400" />
@@ -111,7 +108,6 @@ function LoginContent() {
             </div>
           )}
 
-          {/* Error message */}
           {error && (
             <div className="mb-4 flex items-center gap-2 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3">
               <AlertCircle className="h-4 w-4 shrink-0 text-red-400" />
@@ -120,7 +116,7 @@ function LoginContent() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Email */}
+
             <div>
               <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-white/70">
                 Email
@@ -142,7 +138,6 @@ function LoginContent() {
               </div>
             </div>
 
-            {/* Password */}
             <div>
               <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-white/70">
                 Password
@@ -171,7 +166,6 @@ function LoginContent() {
               </div>
             </div>
 
-            {/* Submit */}
             <button
               type="submit"
               disabled={loading}
@@ -191,7 +185,6 @@ function LoginContent() {
             </button>
           </form>
 
-          {/* Demo credentials */}
           <div className="mt-6 rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
             <p className="mb-2 text-xs font-medium uppercase tracking-wider text-white/40">
               Demo Accounts
@@ -222,7 +215,6 @@ function LoginContent() {
             </p>
           </div>
 
-          {/* Register link */}
           <p className="mt-6 text-center text-sm text-white/40">
             Don&apos;t have an account?{" "}
             <Link

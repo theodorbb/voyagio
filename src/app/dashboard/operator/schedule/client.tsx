@@ -47,7 +47,6 @@ export function ScheduleManagementClient({ activities }: Props) {
   const [showCreate, setShowCreate] = useState(false);
   const [cancelling, setCancelling] = useState<string | null>(null);
 
-  // Read activityId from URL params
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const actId = params.get("activityId");
@@ -58,7 +57,7 @@ export function ScheduleManagementClient({ activities }: Props) {
     setLoading(true);
     const params = new URLSearchParams();
     if (selectedActivity) params.set("activityId", selectedActivity);
-    // Show from today
+
     params.set("dateFrom", new Date().toISOString().slice(0, 10));
 
     const res = await fetch(`/api/operator/timeslots?${params}`);
@@ -88,7 +87,6 @@ export function ScheduleManagementClient({ activities }: Props) {
     setCancelling(null);
   };
 
-  // Group slots by date
   const grouped: Record<string, TimeSlotData[]> = {};
   for (const slot of slots) {
     const dateKey = new Date(slot.date).toISOString().slice(0, 10);
@@ -101,7 +99,7 @@ export function ScheduleManagementClient({ activities }: Props) {
   return (
     <div className="min-h-screen pb-12 pt-24">
       <div className="section-container">
-        {/* Header */}
+
         <motion.div
           variants={fadeInUp}
           initial="hidden"
@@ -135,7 +133,6 @@ export function ScheduleManagementClient({ activities }: Props) {
           </div>
         </motion.div>
 
-        {/* Activity filter */}
         <div className="mb-6">
           <select
             value={selectedActivity}
@@ -153,7 +150,6 @@ export function ScheduleManagementClient({ activities }: Props) {
           </select>
         </div>
 
-        {/* Slots grouped by date */}
         {loading ? (
           <div className="flex items-center justify-center py-20">
             <Loader2 className="h-6 w-6 animate-spin text-white/20" />
@@ -194,7 +190,7 @@ export function ScheduleManagementClient({ activities }: Props) {
 
               return (
                 <motion.div key={dateKey} variants={fadeInUp}>
-                  {/* Date header */}
+
                   <div className="mb-3 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="flex h-12 w-12 flex-col items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03]">
@@ -219,7 +215,6 @@ export function ScheduleManagementClient({ activities }: Props) {
                       </div>
                     </div>
 
-                    {/* Day utilization bar */}
                     <div className="flex items-center gap-2">
                       <div className="h-1.5 w-20 overflow-hidden rounded-full bg-white/[0.06]">
                         <div
@@ -238,7 +233,6 @@ export function ScheduleManagementClient({ activities }: Props) {
                     </div>
                   </div>
 
-                  {/* Slot cards */}
                   <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                     {daySlots.map((slot) => (
                       <div
@@ -276,7 +270,6 @@ export function ScheduleManagementClient({ activities }: Props) {
                           )}
                         </div>
 
-                        {/* Utilization */}
                         <div className="mt-3">
                           <div className="flex items-center justify-between text-xs">
                             <span className="flex items-center gap-1 text-white/40">
@@ -332,7 +325,6 @@ export function ScheduleManagementClient({ activities }: Props) {
           </motion.div>
         )}
 
-        {/* Create Slots Modal */}
         {showCreate && (
           <CreateSlotsModal
             activities={activities}
@@ -349,7 +341,6 @@ export function ScheduleManagementClient({ activities }: Props) {
   );
 }
 
-// ─── Create Slots Modal ─────────────────────
 function CreateSlotsModal({
   activities,
   preselectedActivity,
@@ -372,7 +363,6 @@ function CreateSlotsModal({
     dateTo: "",
   });
 
-  // Set default dates to next 7 days
   useEffect(() => {
     const today = new Date();
     const next = new Date();
@@ -389,7 +379,6 @@ function CreateSlotsModal({
     setSaving(true);
     setError("");
 
-    // Generate date array from range
     const dates: string[] = [];
     const start = new Date(form.dateFrom);
     const end = new Date(form.dateTo);

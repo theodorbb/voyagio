@@ -62,7 +62,7 @@ export function ConfirmationClient({ booking }: { booking: BookingData }) {
   return (
     <div className="min-h-screen pt-24 pb-20">
       <div className="section-container max-w-2xl">
-        {/* Success icon */}
+
         <motion.div
           variants={fadeIn}
           initial="hidden"
@@ -83,14 +83,13 @@ export function ConfirmationClient({ booking }: { booking: BookingData }) {
           </p>
         </motion.div>
 
-        {/* Booking card */}
         <motion.div
           variants={fadeInUp}
           initial="hidden"
           animate="visible"
           className="overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.03]"
         >
-          {/* Activity cover */}
+
           <div className="relative h-48 overflow-hidden">
             <Image
               src={act.coverImage}
@@ -114,7 +113,6 @@ export function ConfirmationClient({ booking }: { booking: BookingData }) {
             </div>
           </div>
 
-          {/* Details grid */}
           <div className="grid grid-cols-2 gap-4 p-5">
             <div className="flex items-start gap-3">
               <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent/10">
@@ -175,7 +173,6 @@ export function ConfirmationClient({ booking }: { booking: BookingData }) {
             </div>
           </div>
 
-          {/* Price */}
           <div className="mx-5 mb-5 flex items-center justify-between rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3">
             <div>
               <p className="text-xs text-white/30">
@@ -203,7 +200,6 @@ export function ConfirmationClient({ booking }: { booking: BookingData }) {
           )}
         </motion.div>
 
-        {/* Actions */}
         <motion.div
           variants={fadeInUp}
           initial="hidden"

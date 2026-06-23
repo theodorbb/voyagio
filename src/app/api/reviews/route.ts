@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-// ─── Create a review for a completed booking ────────────
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
@@ -13,7 +12,6 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const { bookingId, rating, comment } = body;
 
-  // Validate input
   if (!bookingId || typeof rating !== "number" || rating < 1 || rating > 5) {
     return NextResponse.json(
       { error: "bookingId and rating (1-5) are required" },
@@ -21,7 +19,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Fetch the booking with ownership check
   const booking = await prisma.booking.findUnique({
     where: { id: bookingId },
     include: { review: true },
@@ -46,7 +43,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Create review and update activity aggregate
   const trimmedComment =
     typeof comment === "string" ? comment.trim().slice(0, 2000) : null;
 
@@ -61,7 +57,6 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Recalculate activity rating aggregate
     const agg = await tx.review.aggregate({
       where: { activityId: booking.activityId },
       _avg: { rating: true },
@@ -82,7 +77,6 @@ export async function POST(req: NextRequest) {
   return NextResponse.json(review, { status: 201 });
 }
 
-// ─── Get user's reviews (or reviews for an activity) ────
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
@@ -100,7 +94,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(reviews);
   }
 
-  // Default: user's own reviews
   const reviews = await prisma.review.findMany({
     where: { userId: session.user.id },
     orderBy: { createdAt: "desc" },

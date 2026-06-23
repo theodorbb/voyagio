@@ -10,7 +10,7 @@ import { OPERATOR_FEATURES } from "@/lib/constants";
 export function OperatorValue() {
   return (
     <section className="section-padding relative overflow-hidden">
-      {/* Background */}
+
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-b from-[var(--background)] via-surface-dark to-[var(--background)]" />
         <div className="absolute right-0 top-1/4 h-[400px] w-[400px] rounded-full bg-accent/8 blur-[120px]" />

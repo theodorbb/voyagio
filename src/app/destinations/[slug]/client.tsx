@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import Image from "next/image";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { SafeImage } from "@/components/shared/safe-image";
 import {
   MapPin,
   Star,
@@ -14,8 +14,16 @@ import {
   Activity as ActivityIcon,
 } from "lucide-react";
 import { fadeInUp, fadeIn, staggerContainer } from "@/lib/motion";
-import { ActivityCard, SearchBar, FilterChip, EmptyState } from "@/components/browse";
+import {
+  ActivityCard,
+  SearchBar,
+  FilterChip,
+  EmptyState,
+  ShowMoreButton,
+} from "@/components/browse";
 import { VoyagioMap } from "@/components/maps/voyagio-map";
+
+const INITIAL_VISIBLE = 8;
 
 interface DestinationData {
   id: string;
@@ -65,6 +73,7 @@ export function DestinationDetailClient({
 }: Props) {
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);  const router = useRouter();
+  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE);
   const filtered = useMemo(() => {
     let result = activities;
     if (search) {
@@ -81,11 +90,17 @@ export function DestinationDetailClient({
     return result;
   }, [activities, search, selectedCategory]);
 
+  useEffect(() => {
+    setVisibleCount(INITIAL_VISIBLE);
+  }, [search, selectedCategory]);
+
+  const visible = filtered.slice(0, visibleCount);
+
   return (
     <div className="min-h-screen">
-      {/* Hero */}
+
       <section className="relative h-[50vh] min-h-[400px] overflow-hidden">
-        <Image
+        <SafeImage
           src={destination.coverImage}
           alt={destination.name}
           fill
@@ -96,7 +111,6 @@ export function DestinationDetailClient({
         <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-[var(--background)]/60 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-r from-[var(--background)]/40 to-transparent" />
 
-        {/* Back button */}
         <div className="section-container relative z-10 flex h-full flex-col justify-end pb-10 pt-28">
           <motion.div variants={fadeIn} initial="hidden" animate="visible">
             <Link
@@ -118,7 +132,6 @@ export function DestinationDetailClient({
               {destination.name}
             </h1>
 
-            {/* Stats row */}
             <div className="mt-4 flex flex-wrap items-center gap-5 text-sm">
               <div className="flex items-center gap-1.5">
                 <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
@@ -145,7 +158,7 @@ export function DestinationDetailClient({
       </section>
 
       <section className="section-container py-12">
-        {/* Description + Highlights */}
+
         <div className="grid gap-10 lg:grid-cols-3">
           <motion.div
             variants={fadeInUp}
@@ -191,7 +204,6 @@ export function DestinationDetailClient({
           )}
         </div>
 
-        {/* Activities section */}
         <div className="mt-16">
           <motion.div
             variants={fadeInUp}
@@ -208,7 +220,6 @@ export function DestinationDetailClient({
             </p>
           </motion.div>
 
-          {/* Search & category filters */}
           <div className="mb-8 space-y-4">
             <SearchBar
               value={search}
@@ -238,7 +249,6 @@ export function DestinationDetailClient({
             )}
           </div>
 
-          {/* Grid */}
           {filtered.length === 0 ? (
             <EmptyState
               title="No activities found"
@@ -263,7 +273,7 @@ export function DestinationDetailClient({
               viewport={{ once: true }}
               className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
             >
-              {filtered.map((a, i) => (
+              {visible.map((a, i) => (
                 <ActivityCard
                   key={a.id}
                   {...a}
@@ -273,9 +283,16 @@ export function DestinationDetailClient({
               ))}
             </motion.div>
           )}
+
+          {filtered.length > visibleCount && (
+            <ShowMoreButton
+              remaining={filtered.length - visibleCount}
+              totalLabel="more"
+              onClick={() => setVisibleCount((c) => c + INITIAL_VISIBLE)}
+            />
+          )}
         </div>
 
-        {/* Map section */}
         {activities.some((a) => a.latitude && a.longitude) && (
           <motion.div
             variants={fadeInUp}
@@ -315,7 +332,6 @@ export function DestinationDetailClient({
           </motion.div>
         )}
 
-        {/* CTA */}
         <motion.div
           variants={fadeInUp}
           initial="hidden"

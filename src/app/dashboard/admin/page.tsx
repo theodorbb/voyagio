@@ -7,7 +7,6 @@ export default async function AdminDashboardPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
-  // ─── Platform KPIs ────────────────────────
   const [
     totalUsers,
     totalTourists,
@@ -46,7 +45,6 @@ export default async function AdminDashboardPage() {
     prisma.favorite.count(),
   ]);
 
-  // ─── Destination Stats ────────────────────
   const destinations = await prisma.destination.findMany({
     select: {
       id: true, name: true, slug: true, coverImage: true,
@@ -74,7 +72,6 @@ export default async function AdminDashboardPage() {
     })
     .sort((a, b) => b.revenue - a.revenue);
 
-  // ─── Category Stats ───────────────────────
   const categoryData = await prisma.activity.groupBy({ by: ["category"], _count: true, _avg: { rating: true } });
   const categoryStats = await Promise.all(
     categoryData.map(async (c) => {
@@ -88,7 +85,6 @@ export default async function AdminDashboardPage() {
   );
   categoryStats.sort((a, b) => b.bookings - a.bookings);
 
-  // ─── Top Activities ───────────────────────
   const topByBookings = await prisma.activity.findMany({
     orderBy: { bookings: { _count: "desc" } },
     take: 8,
@@ -107,7 +103,6 @@ export default async function AdminDashboardPage() {
     revenue: Math.round(a.bookings.reduce((s, b) => s + b.totalPrice, 0)),
   }));
 
-  // ─── Operator Performance ─────────────────
   const operators = await prisma.user.findMany({
     where: { role: "OPERATOR" },
     select: {
@@ -135,7 +130,6 @@ export default async function AdminDashboardPage() {
     })
     .sort((a, b) => b.revenue - a.revenue);
 
-  // ─── Recent Feed ──────────────────────────
   const [recentBookings, recentReviews, recentUsers] = await Promise.all([
     prisma.booking.findMany({
       orderBy: { createdAt: "desc" }, take: 8,
@@ -151,7 +145,6 @@ export default async function AdminDashboardPage() {
     }),
   ]);
 
-  // ─── Utilization ──────────────────────────
   const slotStats = await prisma.timeSlot.aggregate({
     where: { status: { not: "CANCELLED" } },
     _sum: { capacity: true, bookedCount: true }, _count: true,

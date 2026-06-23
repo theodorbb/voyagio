@@ -100,7 +100,6 @@ export default async function OperatorDashboardPage() {
     }),
   ]);
 
-  // Category breakdown
   const categoryBreakdown = await prisma.activity.groupBy({
     by: ["category"],
     where: { operatorId: user.id },

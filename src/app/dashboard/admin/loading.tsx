@@ -2,7 +2,7 @@ export default function Loading() {
   return (
     <div className="min-h-screen pt-24 pb-12">
       <div className="section-container">
-        {/* Header skeleton */}
+
         <div className="mb-8">
           <div className="mb-1 flex items-center gap-2">
             <div className="h-4 w-4 animate-pulse rounded bg-violet-500/20" />
@@ -12,7 +12,6 @@ export default function Loading() {
           <div className="mt-3 h-4 w-52 animate-pulse rounded-lg bg-white/[0.04]" />
         </div>
 
-        {/* KPI cards skeleton */}
         <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="glass-card p-6">
@@ -28,14 +27,12 @@ export default function Loading() {
           ))}
         </div>
 
-        {/* Mini KPIs skeleton */}
         <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="h-16 animate-pulse rounded-xl border border-white/[0.06] bg-white/[0.02]" />
           ))}
         </div>
 
-        {/* Analytics panels skeleton */}
         <div className="grid gap-6 lg:grid-cols-2">
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="glass-card p-6">

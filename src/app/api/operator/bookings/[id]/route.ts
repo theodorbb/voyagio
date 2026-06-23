@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-// PATCH /api/operator/bookings/[id] — update booking status (complete or cancel)
 export async function PATCH(
   req: NextRequest,
   { params }: { params: { id: string } }
@@ -45,7 +44,7 @@ export async function PATCH(
   }
 
   if (body.status === "CANCELLED" && booking.status === "CONFIRMED") {
-    // Cancelling: release capacity
+
     await prisma.$transaction(async (tx) => {
       await tx.booking.update({
         where: { id: params.id },
@@ -63,7 +62,7 @@ export async function PATCH(
       }
     });
   } else {
-    // Completing
+
     await prisma.booking.update({
       where: { id: params.id },
       data: { status: body.status },

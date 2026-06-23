@@ -32,7 +32,6 @@ import {
   FeedItem,
 } from "@/components/admin/analytics-components";
 
-// ─── Types ──────────────────────────────────
 interface KPIs {
   totalUsers: number;
   totalTourists: number;
@@ -171,7 +170,7 @@ export function AdminDashboardClient({ user, data }: AdminDashboardClientProps) 
   return (
     <div className="min-h-screen pb-16 pt-24">
       <div className="section-container">
-        {/* ─── Header ───────────────────────── */}
+
         <motion.div variants={fadeInUp} initial="hidden" animate="visible" className="mb-8">
           <div className="flex items-center gap-2 mb-1">
             <Shield className="h-4 w-4 text-violet-400" />
@@ -187,7 +186,6 @@ export function AdminDashboardClient({ user, data }: AdminDashboardClientProps) 
           </p>
         </motion.div>
 
-        {/* ─── Primary KPIs ─────────────────── */}
         <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
           <StatCard
             label="Total Users"
@@ -219,7 +217,6 @@ export function AdminDashboardClient({ user, data }: AdminDashboardClientProps) 
           />
         </motion.div>
 
-        {/* ─── Secondary KPIs ───────────────── */}
         <motion.div variants={fadeInUp} initial="hidden" animate="visible" className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
           <KpiMini label="Avg Rating" value={kpis.avgRating || "—"} icon={Star} color="text-amber-400" bgColor="bg-amber-500/10" />
           <KpiMini label="Reviews" value={kpis.totalReviews} icon={MessageSquare} color="text-violet-400" bgColor="bg-violet-500/10" />
@@ -229,7 +226,6 @@ export function AdminDashboardClient({ user, data }: AdminDashboardClientProps) 
           <KpiMini label="Time Slots" value={kpis.totalSlots} icon={Layers} color="text-orange-400" bgColor="bg-orange-500/10" />
         </motion.div>
 
-        {/* ─── Booking Status Distribution ──── */}
         <motion.div variants={fadeInUp} initial="hidden" animate="visible" className="mb-8">
           <AnalyticsPanel title="Booking Status Distribution" subtitle="All-time booking breakdown" icon={BarChart3}>
             <StatusBar
@@ -243,9 +239,8 @@ export function AdminDashboardClient({ user, data }: AdminDashboardClientProps) 
           </AnalyticsPanel>
         </motion.div>
 
-        {/* ─── Main Analytics Grid ──────────── */}
         <div className="grid gap-6 lg:grid-cols-2">
-          {/* Destination Performance */}
+
           <motion.div variants={fadeInUp} initial="hidden" animate="visible">
             <AnalyticsPanel title="Destination Performance" subtitle="Ranked by revenue" icon={Globe}>
               <RankingList
@@ -264,7 +259,6 @@ export function AdminDashboardClient({ user, data }: AdminDashboardClientProps) 
             </AnalyticsPanel>
           </motion.div>
 
-          {/* Category Breakdown */}
           <motion.div variants={fadeInUp} initial="hidden" animate="visible">
             <AnalyticsPanel title="Category Breakdown" subtitle="Activity types & bookings" icon={Layers}>
               {data.categoryStats.length > 0 ? (
@@ -294,7 +288,6 @@ export function AdminDashboardClient({ user, data }: AdminDashboardClientProps) 
             </AnalyticsPanel>
           </motion.div>
 
-          {/* Top Activities by Bookings */}
           <motion.div variants={fadeInUp} initial="hidden" animate="visible">
             <AnalyticsPanel title="Top Activities" subtitle="By booking volume" icon={TrendingUp}>
               <RankingList
@@ -313,7 +306,6 @@ export function AdminDashboardClient({ user, data }: AdminDashboardClientProps) 
             </AnalyticsPanel>
           </motion.div>
 
-          {/* Operator Performance */}
           <motion.div variants={fadeInUp} initial="hidden" animate="visible">
             <AnalyticsPanel title="Operator Performance" subtitle="Ranked by revenue" icon={UserCheck}>
               {data.operatorStats.length > 0 ? (
@@ -337,9 +329,8 @@ export function AdminDashboardClient({ user, data }: AdminDashboardClientProps) 
           </motion.div>
         </div>
 
-        {/* ─── Activity Feed Row ────────────── */}
         <div className="mt-6 grid gap-6 lg:grid-cols-3">
-          {/* Recent Bookings */}
+
           <motion.div variants={fadeInUp} initial="hidden" animate="visible">
             <AnalyticsPanel title="Recent Bookings" subtitle="Latest platform bookings" icon={ShoppingBag}>
               <div className="space-y-1 max-h-[340px] overflow-y-auto scrollbar-thin">
@@ -365,7 +356,6 @@ export function AdminDashboardClient({ user, data }: AdminDashboardClientProps) 
             </AnalyticsPanel>
           </motion.div>
 
-          {/* Recent Reviews */}
           <motion.div variants={fadeInUp} initial="hidden" animate="visible">
             <AnalyticsPanel title="Recent Reviews" subtitle="Latest user feedback" icon={MessageSquare}>
               <div className="space-y-1 max-h-[340px] overflow-y-auto scrollbar-thin">
@@ -386,7 +376,6 @@ export function AdminDashboardClient({ user, data }: AdminDashboardClientProps) 
             </AnalyticsPanel>
           </motion.div>
 
-          {/* Recent Users */}
           <motion.div variants={fadeInUp} initial="hidden" animate="visible">
             <AnalyticsPanel title="New Users" subtitle="Latest registrations" icon={UserPlus}>
               <div className="space-y-1 max-h-[340px] overflow-y-auto scrollbar-thin">

@@ -15,14 +15,14 @@ import { slideInLeft, slideInRight } from "@/lib/motion";
 export function TripBuilderPromo() {
   return (
     <section className="section-padding relative overflow-hidden">
-      {/* Background accent */}
+
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-1/2 top-1/2 h-[600px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-[140px]" />
       </div>
 
       <div className="section-container relative">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
-          {/* Left: Content */}
+
           <motion.div
             variants={slideInLeft}
             initial="hidden"
@@ -49,7 +49,7 @@ export function TripBuilderPromo() {
               {[
                 {
                   icon: Sparkles,
-                  title: "AI-Powered Suggestions",
+                  title: "Smart Suggestions",
                   description:
                     "Activities matched to your travel style, interests, and group size.",
                 },
@@ -91,7 +91,6 @@ export function TripBuilderPromo() {
             </Link>
           </motion.div>
 
-          {/* Right: Visual mockup */}
           <motion.div
             variants={slideInRight}
             initial="hidden"
@@ -99,7 +98,7 @@ export function TripBuilderPromo() {
             viewport={{ once: true, margin: "-100px" }}
           >
             <div className="glass-card relative overflow-hidden p-6 glow-primary">
-              {/* Header */}
+
               <div className="mb-6 flex items-center justify-between">
                 <div>
                   <p className="text-xs font-medium text-white/40">Your Trip</p>
@@ -112,7 +111,6 @@ export function TripBuilderPromo() {
                 </div>
               </div>
 
-              {/* Day cards */}
               {[
                 {
                   day: "Day 1",
@@ -172,7 +170,6 @@ export function TripBuilderPromo() {
                 </div>
               ))}
 
-              {/* Gradient overlay at bottom */}
               <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[var(--surface)] to-transparent" />
             </div>
           </motion.div>

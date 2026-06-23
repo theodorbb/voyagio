@@ -7,14 +7,14 @@ import { slideInLeft, slideInRight } from "@/lib/motion";
 export function AnalyticsTeaser() {
   return (
     <section className="section-padding relative overflow-hidden">
-      {/* Background */}
+
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-0 top-1/3 h-[400px] w-[400px] rounded-full bg-primary-light/8 blur-[120px]" />
       </div>
 
       <div className="section-container relative">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
-          {/* Left: Dashboard mockup */}
+
           <motion.div
             variants={slideInLeft}
             initial="hidden"
@@ -22,7 +22,7 @@ export function AnalyticsTeaser() {
             viewport={{ once: true, margin: "-100px" }}
           >
             <div className="glass-card overflow-hidden p-6 glow-primary">
-              {/* KPI Row */}
+
               <div className="mb-6 grid grid-cols-2 gap-3">
                 {[
                   { label: "Total Bookings", value: "1,247", change: "+12.5%", icon: Activity },
@@ -50,7 +50,6 @@ export function AnalyticsTeaser() {
                 ))}
               </div>
 
-              {/* Chart mockup */}
               <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
                 <div className="mb-4 flex items-center justify-between">
                   <p className="text-xs font-semibold text-white/60">
@@ -60,7 +59,7 @@ export function AnalyticsTeaser() {
                     Live
                   </span>
                 </div>
-                {/* SVG Chart */}
+
                 <div className="h-32">
                   <svg viewBox="0 0 400 100" className="h-full w-full">
                     <defs>
@@ -85,7 +84,6 @@ export function AnalyticsTeaser() {
             </div>
           </motion.div>
 
-          {/* Right: Content */}
           <motion.div
             variants={slideInRight}
             initial="hidden"

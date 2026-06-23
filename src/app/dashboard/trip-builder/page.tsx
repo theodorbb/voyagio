@@ -5,14 +5,13 @@ import { TripBuilderClient } from "./client";
 
 export const metadata = {
   title: "Smart Trip Builder | Voyagio",
-  description: "Create your personalized travel itinerary with our AI-powered trip planner",
+  description: "Create your personalized travel itinerary with our smart trip planner",
 };
 
 export default async function TripBuilderPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
-  // Fetch destinations with activity counts
   const destinations = await prisma.destination.findMany({
     orderBy: { name: "asc" },
     select: {

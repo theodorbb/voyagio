@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-// GET /api/operator/activities — list all operator's activities with stats
 export async function GET() {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id || session.user.role !== "OPERATOR") {
@@ -19,7 +18,6 @@ export async function GET() {
     orderBy: { createdAt: "desc" },
   });
 
-  // Get booking/revenue stats per activity
   const stats = await Promise.all(
     activities.map(async (a) => {
       const [confirmed, completed, totalRevenue, upcomingSlots] =
@@ -76,7 +74,6 @@ export async function GET() {
   return NextResponse.json({ activities: stats });
 }
 
-// POST /api/operator/activities — create a new activity
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id || session.user.role !== "OPERATOR") {
@@ -97,7 +94,6 @@ export async function POST(req: NextRequest) {
     highlights,
   } = body;
 
-  // Validate required fields
   if (!title || typeof title !== "string" || title.trim().length < 3) {
     return NextResponse.json(
       { error: "Title is required (min 3 chars)" },
@@ -139,7 +135,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Check destination exists
   const destination = await prisma.destination.findUnique({
     where: { id: destinationId },
   });
@@ -150,7 +145,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Generate slug
   const baseSlug = title
     .trim()
     .toLowerCase()
@@ -161,7 +155,6 @@ export async function POST(req: NextRequest) {
   });
   const slug = existing ? `${baseSlug}-${Date.now().toString(36)}` : baseSlug;
 
-  // Default image
   const defaultImage = `https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800`;
 
   const activity = await prisma.activity.create({

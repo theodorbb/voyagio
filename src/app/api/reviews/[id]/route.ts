@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-// ─── Update a review ────────────────────────────────────
 export async function PATCH(
   req: NextRequest,
   { params }: { params: { id: string } }
@@ -40,7 +39,6 @@ export async function PATCH(
       data: { rating, comment: trimmedComment || null },
     });
 
-    // Recalculate activity aggregate
     const agg = await tx.review.aggregate({
       where: { activityId: review.activityId },
       _avg: { rating: true },

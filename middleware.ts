@@ -6,7 +6,6 @@ export default withAuth(
     const { pathname } = req.nextUrl;
     const token = req.nextauth.token;
 
-    // Role-based route protection
     if (pathname.startsWith("/dashboard/operator") && token?.role !== "OPERATOR") {
       return NextResponse.redirect(new URL("/dashboard/tourist", req.url));
     }

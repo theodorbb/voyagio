@@ -3,20 +3,21 @@
 import { motion } from "framer-motion";
 import { Clock, Star, MapPin } from "lucide-react";
 import { SectionHeader } from "@/components/shared/section-header";
+import { SafeImage } from "@/components/shared/safe-image";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 import { FEATURED_ACTIVITIES } from "@/lib/constants";
 
 export function ActivitiesShowcase() {
   return (
     <section className="section-padding relative overflow-hidden">
-      {/* Subtle bg gradient */}
+
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-primary-dark/20 to-transparent" />
 
       <div className="section-container relative">
         <SectionHeader
           badge="Curated Experiences"
           title="Handpicked Activities for Every Traveler"
-          description="From adrenaline-fueled adventures to peaceful cultural explorations — find experiences that match your travel personality."
+          description="From adrenaline-fueled adventures to peaceful cultural explorations; find experiences that match your travel personality."
         />
 
         <motion.div
@@ -32,23 +33,23 @@ export function ActivitiesShowcase() {
               variants={fadeInUp}
               className="glass-card-hover group overflow-hidden"
             >
-              {/* Image */}
+
               <div className="relative aspect-[16/10] overflow-hidden">
-                <img
+                <SafeImage
                   src={activity.image}
                   alt={activity.title}
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="transform-gpu object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
 
-                {/* Category badge */}
                 <div className="absolute left-3 top-3">
                   <span className="rounded-full bg-black/50 px-3 py-1 text-[11px] font-semibold text-white backdrop-blur-sm">
                     {activity.category}
                   </span>
                 </div>
 
-                {/* Price badge */}
                 <div className="absolute right-3 top-3">
                   <span className="rounded-full bg-accent px-3 py-1 text-[11px] font-bold text-white">
                     €{activity.price}
@@ -56,7 +57,6 @@ export function ActivitiesShowcase() {
                 </div>
               </div>
 
-              {/* Content */}
               <div className="p-5">
                 <div className="mb-2 flex items-center gap-2 text-[11px] text-white/40">
                   <MapPin className="h-3 w-3" />

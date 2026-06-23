@@ -22,7 +22,7 @@ export function HowItWorks() {
           viewport={{ once: true, margin: "-100px" }}
           className="relative grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4"
         >
-          {/* Connection line (desktop only) */}
+
           <div className="pointer-events-none absolute left-0 right-0 top-16 hidden h-px bg-gradient-to-r from-transparent via-white/10 to-transparent lg:block" />
 
           {HOW_IT_WORKS_STEPS.map((step) => (
@@ -31,7 +31,7 @@ export function HowItWorks() {
               variants={fadeInUp}
               className="group relative text-center"
             >
-              {/* Step number */}
+
               <div className="relative mx-auto mb-6 flex h-16 w-16 items-center justify-center">
                 <div className="absolute inset-0 rounded-2xl border border-white/[0.08] bg-white/[0.03] transition-all duration-500 group-hover:border-accent/30 group-hover:bg-accent/10" />
                 <step.icon className="relative z-10 h-7 w-7 text-white/60 transition-colors group-hover:text-accent" />

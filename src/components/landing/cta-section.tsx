@@ -8,7 +8,7 @@ import { fadeInUp, staggerContainer } from "@/lib/motion";
 export function CtaSection() {
   return (
     <section className="section-padding relative overflow-hidden">
-      {/* Background effects */}
+
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-1/2 top-1/2 h-[500px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-primary/20 via-accent/15 to-primary-light/20 blur-[120px]" />
       </div>
@@ -21,7 +21,7 @@ export function CtaSection() {
           viewport={{ once: true, margin: "-100px" }}
           className="glass-card relative mx-auto max-w-4xl overflow-hidden px-8 py-16 text-center md:px-16 md:py-20"
         >
-          {/* Accent border glow */}
+
           <div className="absolute inset-px rounded-2xl bg-gradient-to-b from-accent/10 via-transparent to-primary-light/10 opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
 
           <motion.div variants={fadeInUp}>

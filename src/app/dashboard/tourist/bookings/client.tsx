@@ -103,7 +103,7 @@ export function MyBookingsClient({ bookings }: { bookings: BookingItem[] }) {
   return (
     <div className="min-h-screen pt-24 pb-20">
       <div className="section-container max-w-4xl">
-        {/* Header */}
+
         <motion.div
           variants={fadeInUp}
           initial="hidden"
@@ -125,7 +125,6 @@ export function MyBookingsClient({ bookings }: { bookings: BookingItem[] }) {
           </p>
         </motion.div>
 
-        {/* Filter tabs */}
         <motion.div
           variants={fadeInUp}
           initial="hidden"
@@ -153,7 +152,6 @@ export function MyBookingsClient({ bookings }: { bookings: BookingItem[] }) {
           })}
         </motion.div>
 
-        {/* Booking list */}
         {filtered.length === 0 ? (
           <motion.div
             variants={fadeInUp}
@@ -205,7 +203,7 @@ export function MyBookingsClient({ bookings }: { bookings: BookingItem[] }) {
                   className="group overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.03] transition-all hover:border-white/[0.12]"
                 >
                   <div className="flex flex-col sm:flex-row">
-                    {/* Image */}
+
                     <div className="relative h-40 w-full shrink-0 sm:h-auto sm:w-48">
                       <Image
                         src={act.coverImage}
@@ -218,7 +216,6 @@ export function MyBookingsClient({ bookings }: { bookings: BookingItem[] }) {
                       <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[var(--background)]/80 sm:hidden" />
                     </div>
 
-                    {/* Content */}
                     <div className="flex flex-1 flex-col justify-between p-5">
                       <div>
                         <div className="mb-2 flex items-center gap-2">
@@ -251,7 +248,6 @@ export function MyBookingsClient({ bookings }: { bookings: BookingItem[] }) {
                           {act.destination.name}, {act.destination.country}
                         </div>
 
-                        {/* Details row */}
                         <div className="mt-3 flex flex-wrap items-center gap-4 text-xs text-white/40">
                           {booking.timeSlot && (
                             <>
@@ -273,7 +269,6 @@ export function MyBookingsClient({ bookings }: { bookings: BookingItem[] }) {
                         </div>
                       </div>
 
-                      {/* Footer */}
                       <div className="mt-4 flex items-center justify-between border-t border-white/[0.04] pt-3">
                         <div>
                           <p className="font-display text-lg font-bold text-white">
@@ -351,7 +346,6 @@ export function MyBookingsClient({ bookings }: { bookings: BookingItem[] }) {
           </motion.div>
         )}
 
-        {/* Review Modal */}
         {reviewTarget && (
           <ReviewModal
             isOpen={!!reviewTarget}

@@ -13,7 +13,7 @@ interface PageHeaderProps {
 export function PageHeader({ title, highlight, description, children }: PageHeaderProps) {
   return (
     <section className="relative overflow-hidden pb-8 pt-28 md:pt-36">
-      {/* Background effects */}
+
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-1/4 top-0 h-72 w-72 rounded-full bg-primary/15 blur-[120px]" />
         <div className="absolute right-1/4 top-1/3 h-64 w-64 rounded-full bg-accent/10 blur-[100px]" />

@@ -9,11 +9,11 @@ import { TESTIMONIALS, PLATFORM_STATS } from "@/lib/constants";
 export function Testimonials() {
   return (
     <section className="section-padding relative overflow-hidden">
-      {/* Background */}
+
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-surface-dark/50 to-transparent" />
 
       <div className="section-container relative">
-        {/* Stats row */}
+
         <motion.div
           variants={staggerContainer}
           initial="hidden"
@@ -38,7 +38,6 @@ export function Testimonials() {
           ))}
         </motion.div>
 
-        {/* Testimonials */}
         <SectionHeader
           badge="Traveler Stories"
           title="Loved by Travelers & Operators"

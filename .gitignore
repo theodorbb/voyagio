@@ -28,6 +28,13 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# local build / run artifacts (never push)
+*.log
+build_log.txt
+build_output.txt
+probe.txt
+dev-server.log
+
 # local env files
 .env
 .env*.local
@@ -38,6 +45,9 @@ prisma/dev.db-journal
 
 # vercel
 .vercel
+
+# dissertation (local only, never push)
+/disertatie
 
 # typescript
 *.tsbuildinfo

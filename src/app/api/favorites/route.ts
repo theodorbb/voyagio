@@ -14,7 +14,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "activityId required" }, { status: 400 });
   }
 
-  // Check if already favorited
   const existing = await prisma.favorite.findUnique({
     where: {
       userId_activityId: {

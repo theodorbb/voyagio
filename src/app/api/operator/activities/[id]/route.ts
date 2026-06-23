@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-// PATCH /api/operator/activities/[id] — update activity status or details
 export async function PATCH(
   req: NextRequest,
   { params }: { params: { id: string } }
@@ -30,7 +29,6 @@ export async function PATCH(
   const body = await req.json();
   const updates: Record<string, unknown> = {};
 
-  // Allow updating specific fields
   if (body.status && ["DRAFT", "ACTIVE", "ARCHIVED"].includes(body.status)) {
     updates.status = body.status;
   }

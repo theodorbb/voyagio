@@ -3,8 +3,17 @@
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Globe } from "lucide-react";
-import { PageHeader, DestinationCard, SearchBar, FilterChip, EmptyState } from "@/components/browse";
+import {
+  PageHeader,
+  DestinationCard,
+  SearchBar,
+  FilterChip,
+  EmptyState,
+  ShowMoreButton,
+} from "@/components/browse";
 import { staggerContainer } from "@/lib/motion";
+
+const INITIAL_VISIBLE = 8;
 
 interface Destination {
   id: string;
@@ -27,6 +36,7 @@ interface Props {
 export function DestinationsClient({ destinations, countries }: Props) {
   const [search, setSearch] = useState("");
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
+  const [showAll, setShowAll] = useState(false);
 
   const filtered = useMemo(() => {
     let result = destinations;
@@ -45,8 +55,15 @@ export function DestinationsClient({ destinations, countries }: Props) {
     return result;
   }, [destinations, search, selectedCountry]);
 
-  const featured = filtered.filter((d) => d.featured);
-  const rest = filtered.filter((d) => !d.featured);
+  const ordered = useMemo(() => {
+    const f = filtered.filter((d) => d.featured);
+    const r = filtered.filter((d) => !d.featured);
+    return [...f, ...r];
+  }, [filtered]);
+
+  const isFiltering = !!search || !!selectedCountry;
+
+  const visible = isFiltering || showAll ? ordered : ordered.slice(0, INITIAL_VISIBLE);
 
   return (
     <div className="min-h-screen">
@@ -55,7 +72,7 @@ export function DestinationsClient({ destinations, countries }: Props) {
         highlight="Destinations"
         description="Discover handpicked destinations curated by local experts and seasoned travelers."
       >
-        {/* Search & Filters */}
+
         <div className="mx-auto max-w-2xl space-y-4">
           <SearchBar
             value={search}
@@ -97,49 +114,36 @@ export function DestinationsClient({ destinations, countries }: Props) {
           />
         ) : (
           <>
-            {/* Featured */}
-            {featured.length > 0 && (
-              <div className="mb-12">
-                <div className="mb-6 flex items-center gap-2">
-                  <Globe className="h-4 w-4 text-accent" />
-                  <h2 className="font-display text-lg font-semibold text-white">
-                    Featured Destinations
-                  </h2>
-                </div>
-                <motion.div
-                  variants={staggerContainer}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
-                >
-                  {featured.map((d, i) => (
-                    <DestinationCard key={d.id} {...d} index={i} />
-                  ))}
-                </motion.div>
-              </div>
-            )}
+            <div className="mb-6 flex items-center gap-2">
+              <Globe className="h-4 w-4 text-accent" />
+              <h2 className="font-display text-lg font-semibold text-white">
+                {isFiltering ? "Search Results" : "Featured Destinations"}
+              </h2>
+              <span className="text-xs text-white/30">
+                {isFiltering
+                  ? `${filtered.length} found`
+                  : `${visible.length} of ${ordered.length}`}
+              </span>
+            </div>
 
-            {/* Rest */}
-            {rest.length > 0 && (
-              <div>
-                {featured.length > 0 && (
-                  <h2 className="mb-6 font-display text-lg font-semibold text-white">
-                    All Destinations
-                  </h2>
-                )}
-                <motion.div
-                  variants={staggerContainer}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
-                >
-                  {rest.map((d, i) => (
-                    <DestinationCard key={d.id} {...d} index={i} />
-                  ))}
-                </motion.div>
-              </div>
+            <motion.div
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+            >
+              {visible.map((d, i) => (
+                <DestinationCard key={d.id} {...d} index={i} />
+              ))}
+            </motion.div>
+
+            {!isFiltering && !showAll && (
+              <ShowMoreButton
+                remaining={ordered.length - visible.length}
+                totalLabel="more"
+                onClick={() => setShowAll(true)}
+              />
             )}
           </>
         )}

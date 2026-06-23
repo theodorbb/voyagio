@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import { SlidersHorizontal, ArrowUpDown } from "lucide-react";
 import {
@@ -9,9 +9,12 @@ import {
   SearchBar,
   FilterChip,
   EmptyState,
+  ShowMoreButton,
 } from "@/components/browse";
 import { staggerContainer } from "@/lib/motion";
 import { cn } from "@/lib/utils";
+
+const INITIAL_VISIBLE = 12;
 
 interface ActivityData {
   id: string;
@@ -61,11 +64,11 @@ export function ActivitiesClient({ activities, destinations, categories }: Props
   const [selectedPrice, setSelectedPrice] = useState<number | null>(null);
   const [sort, setSort] = useState<SortOption>("featured");
   const [showFilters, setShowFilters] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE);
 
   const filtered = useMemo(() => {
     let result = [...activities];
 
-    // Search
     if (search) {
       const q = search.toLowerCase();
       result = result.filter(
@@ -76,23 +79,19 @@ export function ActivitiesClient({ activities, destinations, categories }: Props
       );
     }
 
-    // Category
     if (selectedCategory) {
       result = result.filter((a) => a.category === selectedCategory);
     }
 
-    // Destination
     if (selectedDestination) {
       result = result.filter((a) => a.destinationSlug === selectedDestination);
     }
 
-    // Price
     if (selectedPrice !== null) {
       const range = PRICE_RANGES[selectedPrice];
       result = result.filter((a) => a.price >= range.min && a.price < range.max);
     }
 
-    // Sort
     switch (sort) {
       case "rating":
         result.sort((a, b) => b.rating - a.rating);
@@ -106,7 +105,7 @@ export function ActivitiesClient({ activities, destinations, categories }: Props
       case "duration":
         result.sort((a, b) => a.duration - b.duration);
         break;
-      // "featured" is default order from server
+
     }
 
     return result;
@@ -116,6 +115,12 @@ export function ActivitiesClient({ activities, destinations, categories }: Props
     (selectedCategory ? 1 : 0) +
     (selectedDestination ? 1 : 0) +
     (selectedPrice !== null ? 1 : 0);
+
+  useEffect(() => {
+    setVisibleCount(INITIAL_VISIBLE);
+  }, [search, selectedCategory, selectedDestination, selectedPrice, sort]);
+
+  const visible = filtered.slice(0, visibleCount);
 
   return (
     <div className="min-h-screen">
@@ -134,7 +139,7 @@ export function ActivitiesClient({ activities, destinations, categories }: Props
       </PageHeader>
 
       <section className="section-container pb-20">
-        {/* Filter bar */}
+
         <div className="mb-8 flex flex-wrap items-center gap-3">
           <button
             onClick={() => setShowFilters(!showFilters)}
@@ -154,7 +159,6 @@ export function ActivitiesClient({ activities, destinations, categories }: Props
             )}
           </button>
 
-          {/* Sort */}
           <div className="relative ml-auto flex items-center gap-2">
             <ArrowUpDown className="h-3.5 w-3.5 text-white/30" />
             <select
@@ -175,7 +179,6 @@ export function ActivitiesClient({ activities, destinations, categories }: Props
           </span>
         </div>
 
-        {/* Expandable filter panel */}
         {showFilters && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
@@ -184,7 +187,7 @@ export function ActivitiesClient({ activities, destinations, categories }: Props
             className="mb-8 overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6"
           >
             <div className="grid gap-6 sm:grid-cols-3">
-              {/* Category */}
+
               <div>
                 <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-white/40">
                   Category
@@ -208,7 +211,6 @@ export function ActivitiesClient({ activities, destinations, categories }: Props
                 </div>
               </div>
 
-              {/* Destination */}
               <div>
                 <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-white/40">
                   Destination
@@ -234,7 +236,6 @@ export function ActivitiesClient({ activities, destinations, categories }: Props
                 </div>
               </div>
 
-              {/* Price range */}
               <div>
                 <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-white/40">
                   Price Range
@@ -276,7 +277,6 @@ export function ActivitiesClient({ activities, destinations, categories }: Props
           </motion.div>
         )}
 
-        {/* Results */}
         {filtered.length === 0 ? (
           <EmptyState
             title="No activities found"
@@ -303,10 +303,18 @@ export function ActivitiesClient({ activities, destinations, categories }: Props
             viewport={{ once: true }}
             className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
           >
-            {filtered.map((a, i) => (
+            {visible.map((a, i) => (
               <ActivityCard key={a.id} {...a} showFavorite index={i} />
             ))}
           </motion.div>
+        )}
+
+        {filtered.length > visibleCount && (
+          <ShowMoreButton
+            remaining={filtered.length - visibleCount}
+            totalLabel="more"
+            onClick={() => setVisibleCount((c) => c + INITIAL_VISIBLE)}
+          />
         )}
       </section>
     </div>

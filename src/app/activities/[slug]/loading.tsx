@@ -1,7 +1,7 @@
 export default function Loading() {
   return (
     <div className="min-h-screen">
-      {/* Hero skeleton */}
+
       <div className="relative h-[45vh] min-h-[360px] animate-pulse bg-white/[0.04]">
         <div className="section-container relative flex h-full flex-col justify-end pb-10 pt-28">
           <div className="mb-2 flex gap-2">
@@ -17,7 +17,6 @@ export default function Loading() {
         </div>
       </div>
 
-      {/* Content skeleton */}
       <div className="section-container py-12">
         <div className="grid gap-10 lg:grid-cols-3">
           <div className="space-y-8 lg:col-span-2">

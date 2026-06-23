@@ -18,11 +18,10 @@ export async function POST(req: NextRequest) {
 
   const now = new Date();
   const startDate = new Date(now);
-  startDate.setDate(startDate.getDate() + 7); // Default: starts in 1 week
+  startDate.setDate(startDate.getDate() + 7);
   const endDate = new Date(startDate);
   endDate.setDate(endDate.getDate() + days - 1);
 
-  // Calculate estimated budget
   const estimatedCost = (itinerary as Array<{ activities: Array<{ price: number }> }>).reduce(
     (sum: number, d: { activities: Array<{ price: number }> }) =>
       sum + d.activities.reduce((s: number, a: { price: number }) => s + a.price, 0),
@@ -44,7 +43,6 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Create trip activities
     for (const day of itinerary as Array<{
       dayNumber: number;
       activities: Array<{

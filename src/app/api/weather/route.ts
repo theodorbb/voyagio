@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// Simple weather conditions for demo - deterministic based on destination coordinates
 const WEATHER_PRESETS = [
   { temp: 24, condition: "Sunny", icon: "sun", humidity: 45, wind: 12, description: "Clear skies, perfect for outdoor activities" },
   { temp: 22, condition: "Partly Cloudy", icon: "cloud-sun", humidity: 55, wind: 15, description: "Comfortable with some clouds" },
@@ -11,7 +10,7 @@ const WEATHER_PRESETS = [
 ];
 
 function generateForecast(lat: number, lng: number) {
-  // Use coordinates to deterministically pick weather (feels natural per location)
+
   const seed = Math.abs(Math.round(lat * 100 + lng * 10));
   const today = WEATHER_PRESETS[seed % WEATHER_PRESETS.length];
 

@@ -8,28 +8,29 @@ import { fadeInUp, staggerContainer, fadeIn } from "@/lib/motion";
 export function HeroSection() {
   return (
     <section className="relative flex min-h-screen items-center overflow-hidden">
-      {/* Background Effects */}
+
       <div className="pointer-events-none absolute inset-0">
-        {/* Gradient orbs */}
+
         <div className="absolute -left-40 top-20 h-[500px] w-[500px] rounded-full bg-primary/20 blur-[120px]" />
         <div className="absolute -right-40 bottom-20 h-[400px] w-[400px] rounded-full bg-accent/15 blur-[120px]" />
         <div className="absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary-light/10 blur-[140px]" />
 
-        {/* Dot grid pattern */}
         <div className="dot-pattern absolute inset-0 opacity-40" />
 
-        {/* Radial gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[var(--background)]" />
       </div>
 
       <div className="section-container relative z-10 pb-20 pt-32 md:pt-40 lg:pt-44">
+
+        <div className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[440px] w-[840px] max-w-[92vw] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--background)]/55 blur-3xl" />
+
         <motion.div
           variants={staggerContainer}
           initial="hidden"
           animate="visible"
           className="mx-auto max-w-4xl text-center"
         >
-          {/* Badge */}
+
           <motion.div variants={fadeInUp}>
             <span className="inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-4 py-1.5 text-xs font-medium text-white/60 backdrop-blur-sm">
               <span className="flex h-1.5 w-1.5 rounded-full bg-green-400">
@@ -39,7 +40,6 @@ export function HeroSection() {
             </span>
           </motion.div>
 
-          {/* Main Headline */}
           <motion.h1
             variants={fadeInUp}
             className="mt-8 font-display text-4xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl"
@@ -49,17 +49,15 @@ export function HeroSection() {
             Tourism Like Never Before
           </motion.h1>
 
-          {/* Subtitle */}
           <motion.p
             variants={fadeInUp}
-            className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-white/50 md:text-lg lg:text-xl"
+            className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-white/70 md:text-lg lg:text-xl"
           >
             Voyagio connects travelers with curated local activities and gives
             tourism operators the tools to manage experiences, schedules, and
-            bookings — all on one intelligent platform.
+            bookings, all on one intelligent platform.
           </motion.p>
 
-          {/* CTAs */}
           <motion.div
             variants={fadeInUp}
             className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
@@ -74,7 +72,6 @@ export function HeroSection() {
             </Link>
           </motion.div>
 
-          {/* Trust indicators */}
           <motion.div
             variants={fadeIn}
             className="mt-16 flex flex-col items-center gap-3"
@@ -95,15 +92,14 @@ export function HeroSection() {
           </motion.div>
         </motion.div>
 
-        {/* Floating Destination Badges */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1, duration: 1 }}
-          className="pointer-events-none absolute inset-0 hidden lg:block"
+          className="pointer-events-none absolute inset-0 hidden opacity-60 xl:block"
         >
-          {/* Left floating badges */}
-          <div className="absolute left-8 top-[35%] animate-float" style={{ animationDelay: "0s" }}>
+
+          <div className="absolute left-4 top-[16%] animate-float" style={{ animationDelay: "0s" }}>
             <div className="glass-card flex items-center gap-3 px-4 py-2.5 shadow-xl">
               <span className="text-xl">🏄</span>
               <div>
@@ -113,7 +109,7 @@ export function HeroSection() {
             </div>
           </div>
 
-          <div className="absolute left-16 bottom-[30%] animate-float" style={{ animationDelay: "2s" }}>
+          <div className="absolute left-6 bottom-[14%] animate-float" style={{ animationDelay: "2s" }}>
             <div className="glass-card flex items-center gap-3 px-4 py-2.5 shadow-xl">
               <span className="text-xl">🍷</span>
               <div>
@@ -123,8 +119,7 @@ export function HeroSection() {
             </div>
           </div>
 
-          {/* Right floating badges */}
-          <div className="absolute right-8 top-[40%] animate-float" style={{ animationDelay: "1s" }}>
+          <div className="absolute right-4 top-[14%] animate-float" style={{ animationDelay: "1s" }}>
             <div className="glass-card flex items-center gap-3 px-4 py-2.5 shadow-xl">
               <span className="text-xl">🏛️</span>
               <div>
@@ -134,7 +129,7 @@ export function HeroSection() {
             </div>
           </div>
 
-          <div className="absolute right-20 bottom-[25%] animate-float" style={{ animationDelay: "3s" }}>
+          <div className="absolute right-6 bottom-[16%] animate-float" style={{ animationDelay: "3s" }}>
             <div className="glass-card flex items-center gap-3 px-4 py-2.5 shadow-xl">
               <span className="text-xl">🌅</span>
               <div>
